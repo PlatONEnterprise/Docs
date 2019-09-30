@@ -10,7 +10,7 @@
 
 这个方法的优点是：新旧合约可以同时并存，不增加区块链存储压力，简单灵活，较强的升级容错能力。缺点：持续不断的版本升级会导致形成较长的链式逻辑关系，维护成本较高。
 
-####  1.2. 硬拷贝迁移法
+### 硬拷贝迁移法
 
 硬拷贝迁移法指的是，新版本和旧版本之间切断逻辑关系，利用外部迁移工具，将旧版本数据逐步拷贝到链下，再从链下重新存储到新版本合约的过程。
 
@@ -28,7 +28,7 @@
 
 ### 比较小结
 
-比较了上述方案效率及操作可行性，我们优先考虑采用1.3节描述的默克尔树迁移法，优势在于：
+比较了上述方案效率及操作可行性，我们优先考虑采用默克尔树迁移法，优势在于：
 
 * 迁移效率最高，用户迁移成本最小；
 * 避免导入导出导致的迁移错误；
@@ -61,7 +61,7 @@ type Account struct {
 * 遍历旧合约C<sub>Old</sub>的存储树；
 * 替换每一个`keytire`中的地址为新合约的地址；
 * 用上述遍历对象构造一颗新树；
-* 将C<sub>New</sub>. stateObject.Account.Root 指向这个新生成的树根；
+* 将C<sub>New</sub>. stateObject.Account.Root 指向这个新生成的树根。
 
 
 
@@ -130,7 +130,7 @@ func (self *StateDB) RawDump() Dump {
 
 2. 在`migProcess()`中处理以下逻辑：
 
-   * 新建`trie`，需要在state_object中添加`newTrie()` 方法
+   * 新建`trie`，需要在state_object中添加`newTrie()` 方法；
 
    * 迭代老合约`old_trie`，迭代处理`old_trie`的 `old_node`:
 
@@ -138,8 +138,8 @@ func (self *StateDB) RawDump() Dump {
 
    ​	- append`new_node`到`newTrie`上；
 
-   * 将新合约的stateObject.Account.Root 指向`newTrie`树根；
+   * 将新合约的stateObject.Account.Root 指向`newTrie`树根。
 
      
 
-   备注：迁移数据在新合约上的兼容性，需要合约逻辑保证；
+   备注：迁移数据在新合约上的兼容性，需要合约逻辑保证。

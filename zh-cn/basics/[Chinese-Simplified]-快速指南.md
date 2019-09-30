@@ -1,25 +1,35 @@
 `快速安装、搭建、测试PlatONE网络`
-## 安装PlatONE
-PlatONE支持Linux运行环境，Linux环境下完整的安装教程请参考PlatONE[安装指南](zh-cn/basics/[Chinese-Simplified]-安装指南)。
 
 ## 搭建私有网络
 如果你希望在本地测试或运行PlatONE，可以参考[安装指南](zh-cn/basics/[Chinese-Simplified]-安装指南), 或者参考以下快速搭链步骤。
 
 ```bash
+# 依赖环境
+# g++ 7.3+
+# cmake 3.10+
+# go 1.11.4+
+
 # 获取PlatONE源码
 git clone --recursive https://github.com/PlatONEnterprise/PlatONE-Go.git
 export WORKSPACE=${PWD}/PlatONE-Go/release/linux
 # 编译PlatONE
 cd PlatONE-Go; make all; cd ..
-# 如果编译失败. 请确保你安装了 1.3.1中全部软件. 然后重新尝试.
+# 如果编译失败. 请确保你安装了依赖环境中全部软件. 然后重新尝试.
 ```
 
 ### 快速搭链
-用户可以使用脚本快速的搭建一个四节点的链以供测试。
+用户可以使用脚本快速的搭建一个单节点或者四节点的链以供测试。
 ```
 cd ${WORKSPACE}/scripts
-./plantonectl.sh four
+
+# 搭建单节点区块链
+./platonectl.sh one
+
+# 搭建四节点区块链
+# ./platonectl.sh four
 ```
+
+搭链成功后，会在`${WORKSPACE}/data`目录下生成节点的数据文件，可以观察日志文件以查看节点的运行情况，比如node-0节点日志位于目录`${WORKSPACE}/data/node-0/logs/platone_log/`中。
 
 ## 创建PlatONE账户
 在发布交易之前，首先用户需要创建一个账户。
@@ -31,7 +41,7 @@ cd ${WORKSPACE}/../../cmd/SysContracts/
 ```
 
 该命令会创建一个新的账户，创建时需要输入一个账户密码，方便后续解锁。
-运行结果如下：
+运行结果如下，账户地址记录在`./config.json`文件中：
 
 ```
 nodeid: 127.0.0.1
@@ -42,7 +52,7 @@ rpc_port: 6791
 ###########################################
 
 Input account passphrase.
-passphrase: 000
+passphrase: your_phrase
 --output{"jsonrpc":"2.0","id":1,"result":"0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c"} --output
 New account: 0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c
 {"jsonrpc":"2.0","id":1,"result":true}
@@ -58,16 +68,30 @@ New account: 0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c
 }
 ```
 ## 解锁账户
-长时间没用使用账户发送过交易，或者节点重启后，账户会被锁定，不能发送交易。需要使用如下命令，重新为账户解锁。
-
+首次创建账户或者是长时间没用使用账户发送过交易，账户会被锁定，不能发送交易。需要使用如下命令，重新为账户解锁。
 ```
 cd ${WORKSPACE}/../../cmd/SysContracts/
-./script/unlock_accout.sh \
+./script/unlock_account.sh \
             --account 0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c \
-            --phrase "your phrase"
+            --phrase "your_phrase"
             --ip 127.0.0.1 \
             --rpc_port 6791
 ```
+
+## 创建并编译用户合约
+
+首先通过如下命令创建一个默认合约，该合约包含了两个基本方法`setName`和`getName`，用户可以在此基础上编写合约逻辑。
+
+```
+cd ${WORKSPACE}/../../cmd/SysContracts/
+# 创建默认合约
+./script/autoprojectForApp.sh  . my_contract
+
+# 编译合约
+./script/autoprojectForApp.sh  .
+```
+生成的合约源码文件位于`${WORKSPACE}/../../cmd/SysContracts/appContract/my_contract/my_contract.cpp`。
+
 ## 部署合约
 
 ```
@@ -77,7 +101,7 @@ cd ${WORKSPACE}/../../cmd/SysContracts/build
 cp ${WORKSPACE}/bin/ctool .  
 
 # 部署合约
-./ctool deploy --abi appContract/appDemo/appDemo.cpp.abi.json --code appContract/appDemo/appDemo.wasm --config ../config.json
+./ctool deploy --abi appContract/my_contract/my_contract.cpp.abi.json --code appContract/my_contract/my_contract.wasm --config ../config.json
 ```
 
 结果:
@@ -87,10 +111,10 @@ contract address: 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206
 ```
 ## 调用合约
 
-调用合约的`invokeNotify方法`
+调用合约的`setName`方法
 
 ```
-./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/appDemo/appDemo.cpp.abi.json   --config ../config.son  --func "invokeNotify" --param "wxbc"  
+./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/my_contract/my_contract.cpp.abi.json   --config ../config.json  --func "setName" --param "wxbc"  
 
  request json data：[{"from":"0x32ab0a20b589f40c7e3d6ee485a2404bb7269f87","to":"0x2ee8d0545ebd20f9a992ff54cb0f21a153539206","gas":"0x0","gasPrice":"0x0","value":"","data":"0xdb8800000000000000028c696e766f6b654e6f746966798477786263","txType":2}] 
 
@@ -100,7 +124,7 @@ contract address: 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206
 调用合约的`getName`方法：
 
 ```
-./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/my_contract/my_contract.cpp.abi.json   --config ./config.json  --func getName
+./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/my_contract/my_contract.cpp.abi.json   --config ../config.json  --func getName
 
 request json data：[{"from":"0x32ab0a20b589f40c7e3d6ee485a2404bb7269f87","to":"0x2ee8d0545ebd20f9a992ff54cb0f21a153539206","gas":"0x0","gasPrice":"0x0","value":"","data":"0xd1880000000000000002876765744e616d65","txType":2},"latest"] 
 
@@ -151,4 +175,3 @@ at block: 1557 (Tue, 18 Jun 2019 16:29:12 CST)
   transactionIndex: 0
 }
 ```
-

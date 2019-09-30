@@ -4,29 +4,11 @@
 
 The permissions in PlatONE are assigned to users in the system. The user's role represents the user's permissions. Currently, users can assign the following roles (permissions).
 
-| User role (permission) | Permissions                                             |
-| :--------------- | :----------------------------------------------- |
-| chainCreator     | The chain creator, generated when the chain is created, is the highest-privileged account in the system. |
-| chainAdmin       | Chain administrator, set by chain creator, can set multiple chain administrators|
-| nodeAdmin        | Node administrator for managing node information in the system             |
-| contractAdmin    | Contract administrator, who can manage contract-related access control in the system   |
-| contractDeployer | Chain Deployer, this role indicates that the user can deploy the contract on the chain|
+<img src="en-us/basics/images/permission_roles.png"></img>
 
 The scope of permissions for each role is shown in the following table.
 
-|                            | chainCreator | chainAdmin | nodeAdmin | contractAdmin | contractDeployer |
-| -------------------------- | ---------------- | ---------------- | ---------- | ---------- | ---------- |
-| Specify or cancel a chain administrator   | &radic;          |                  |            |            |            |
-| Specify or cancel a node administrator       | &radic;          | &radic;          |            |            |            |
-| Specify or cancel a contract administrator       | &radic;          | &radic;          |            |            |            |
-| Specify or cancel a contract deployer       | &radic;          | &radic;          |            | &radic;    |            |
-| New node application               | &radic;          | &radic;          | &radic;    |            |            |
-| Manage all node             | &radic;          | &radic;          |            |            |            |
-| Set up a firewall for your own deployed contract | &radic;          | &radic;          |            |            | &radic;    |
-| Review deployed contracts           | &radic;          | &radic;          |            | &radic;    |            |
-| Manage the nodes you joined         | &radic;          | &radic;          | &radic;    |            |            |
-| Deploy contract                   | &radic;          | &radic;          |            |            | &radic;    |
-
+<img src="en-us/basics/images/permission_table.png"></img>
 
 ## Node Management
 

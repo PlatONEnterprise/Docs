@@ -36,7 +36,7 @@ ctool cnsInvoke --cns "__sys_UserManager" --func 'update("0xdc755eec2b1621fea466
 Delete user:
 
 ```shell
-ctool cnsInvoke --cns "__sys_UserManager" --func 'delUser("0xb239401ecf8427f17c6de134d6a6bddd3100251f")' --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/userManager.cpp.abi.json --config ../config.json
+ctool cnsInvoke --cns "__sys_UserManager" --func 'delUser("0xb239401ecf8427f17c6de134d6a6bddd3100251f")' --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/userManager.cpp.abi.json --config ../admin.json
 ```
 
 Role application:
@@ -61,11 +61,6 @@ ctool cnsInvoke --cns "__sys_RoleManager" --func 'getRolesByName("Alice")' --abi
 ctool cnsInvoke --cns "__sys_RoleManager" --func 'getAccountsByRole("chainAdmin")' --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/roleManager.cpp.abi.json --config ../config.json
 ```
 
-Remove user's role:
-
-```shell
-ctool cnsInvoke --cns "__sys_RoleManager" --func 'removeRole("0xdc755eec2b1621fea466cc022e7d11707cb1b487","["chainAdmin"]")' --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/roleManager.cpp.abi.json --config ../admin.json
-```
 
 
 
@@ -84,7 +79,7 @@ ctool cnsInvoke --cns "__sys_NodeRegister" --func 'registerNode' --param '{"name
 Approve node application(invoke by node Admin)
 
 ```shell
-ctool cnsInvoke --cns "__sys_NodeRegister" --func 'approve' --param "7caae651e633769fa693f633e3a468775bf19699ccdc014eb9449c2eb0f82ebde4a7d28c9b846d2df02d1e7f7e1460fbb31eb83c6faf208dcbfd4f2944d31c61" --param 1 --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/nodeRegister.cpp.abi.json --config ../config.json
+ctool cnsInvoke --cns "__sys_NodeRegister" --func 'approve' --param "7caae651e633769fa693f633e3a468775bf19699ccdc014eb9449c2eb0f82ebde4a7d28c9b846d2df02d1e7f7e1460fbb31eb83c6faf208dcbfd4f2944d31c61" --param 1 --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/nodeRegister.cpp.abi.json --config ../admin.json
 ```
 
 

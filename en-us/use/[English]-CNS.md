@@ -33,7 +33,7 @@ ctool invoke --addr "0x0000000000000000000000000000000000000011" --func 'getCont
 3. unregister contract
 
 ```shell
-ctool invoke --addr "0x0000000000000000000000000000000000000011" --func 'cnsUnregister' --param "test"  --param "1.0.0.0" --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/cnsManager.cpp.abi.json --config ../config.json 
+ctool invoke --addr "0x0000000000000000000000000000000000000011" --func 'cnsUnregister' --param "test"  --param "1.0.0.0" --abi /home/wxuser/temp/PlatONE-Workspace/chain/PlatONE_linux/conf/contracts/cnsManager.cpp.abi.json --config ../admin.json 
 ```
 
 

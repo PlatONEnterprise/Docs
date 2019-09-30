@@ -50,21 +50,16 @@ Privilege model in PlatONE includes three modules according to different objects
 
   Currently there are 5 roles for users:
 
-| role             | description                                                  |
-| :--------------- | :----------------------------------------------------------- |
-| chainCreator     | creator of the chain, generated when the chain is created, is the highest privileged account in the system |
-| chainAdmin       | administrator of the chain，assigned by creator, could appoint other nodes as administrators |
-| nodeAdmin        | node managers, could manage the node information in the system |
-| contractAdmin    | contract managers, could manage the contract permission in the system |
-| contractDeployer | have the rights to deploy contracts                          |
+<img src="en-us/basics/images/permission_roles.png"></img>
 
   Permission for each role is as follows:
 
-<img src="en-us/basics/images/7DB2DC97-F278-4CCF-A11C-36B9397C5FD9.png"></img>
+<img src="en-us/basics/images/permission_table.png"></img>
 
 + Node Management
 
-  In PlatONE, nodes are controlled by node management contract, and only the chainCreator, chainAdmin and nodeAdmin could update nodes data in system contract. Thus,  to add nodes, update node, or delete nodes, only accounts with these roles could invoke node management contracts to perform above operations.
+  In PlatONE, nodes are controlled by node management contract, and only the chainCreator, chainAdmin and nodeAdmin could update nodes data in system contract. Thus,  to add nodes, update node, or delete nodes, only accounts with these roles could invoke node management contracts to perform above operations.Note that nodeAdmins can only manage the nodes that they have added, chainCreator and chainAdmins can manage all nodes.
+
 
 + Contract Firewall
 
@@ -72,7 +67,7 @@ Privilege model in PlatONE includes three modules according to different objects
 
   Contract firewall includes filter rules for each contract interface to achieve access control on interface level, which is implemented by the following two lists.
 
-  - ACCEPT LIST:  the list of accepted address for the corresponding interface, namely whitelist
-  - REJECT LIST:  the list of rejected address for the corresponding interface, namely blacklist
+  - ACCEPT LIST:  the list of accepted address for the corresponding interface, namely whitelist.
+  - REJECT LIST:  the list of rejected address for the corresponding interface, namely blacklist.
 
 

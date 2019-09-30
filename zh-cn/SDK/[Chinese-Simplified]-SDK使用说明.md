@@ -4,7 +4,7 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
 
 ## 快速入门
 
-​	安装或导入
+ 安装或导入
 
  1. 环境要求：jdk1.8
 
@@ -26,32 +26,32 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
             <dependency>
                 <groupId>com.platone.client</groupId>
                 <artifactId>core</artifactId>
-                <version>0.4.0</version>
+                <version>0.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.platone.client</groupId>
                 <artifactId>crypto</artifactId>
-                <version>0.4.0</version>
+                <version>0.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.platone.client</groupId>
                 <artifactId>abi</artifactId>
-                <version>0.4.0</version>
+                <version>0.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.platone.client</groupId>
                 <artifactId>rlp</artifactId>
-                <version>0.4.0</version>
+                <version>0.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.platone.client</groupId>
                 <artifactId>tuples</artifactId>
-                <version>0.4.0</version>
+                <version>0.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.platone.client</groupId>
                 <artifactId>utils</artifactId>
-                <version>0.4.0</version>
+                <version>0.4.1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -101,104 +101,107 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
         </dependencies>
     ```
 
-​	初始化
-
-​		首先需要与PlatONE节点建立连接，以获取链上有关服务。SDK支持建立http连接和websocket连接两种方式。
-
-```java
-//http短连接
-Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:6791"));
-```
 
 
-```java
-//ws长连接
-WebSocketClient webSocketClient = new WebSocketClient(newURI("ws://127.0.0.1:6791"));
-WebSocketService ws = new WebSocketService(webSocketClient,true);
-ws.connect();
-Web3j web3j = Web3j.build(ws);
-```
+初始化
 
-说明：
+1. 首先需要与PlatONE节点建立连接，以获取链上有关服务。PlatONE支持建立http连接和websocket连接两种方式。
 
-1. 建立Websocket连接需要显式调用connect方法（与HTTP不同）
+   ```java
+   //http短连接
+   Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:6791"));
+   ```
 
-2. PlatONE节点需要在启动时打开websocket监听功能，即启动时加入参数：--ws
+   ```java
+   //ws长连接
+   WebSocketClient webSocketClient = new WebSocketClient(newURI("ws://127.0.0.1:6791"));
+   WebSocketService ws = new WebSocketService(webSocketClient,true);
+   ws.connect();
+   Web3j web3j = Web3j.build(ws);
+   ```
 
-   
+   说明：
+   1. 建立Websocket连接需要显式调用connect方法（与HTTP不同）。
+   	
+   2. PlatONE节点需要在启动时打开websocket监听功能，即启动时加入参数：--ws。
+
+
+​	
 
 ## 合约
 
 ​	合约骨架生成
 
-​	1. 编写合约(以demo为例)，编写合约的步骤请参阅《PlatONE合约初级教程》。
+ 1. 编写合约(以demo为例)，编写合约的步骤请参阅《PlatONE合约初级教程》。
 
-```c++
-#include <stdlib.h>
-#include <string.h>
-#include <string>
-#include <bcwasm/bcwasm.hpp>
+    ```c++
+    #include <stdlib.h>
+    #include <string.h>
+    #include <string>
+    #include <bcwasm/bcwasm.hpp>
+    
+    namespace demo {
+        class FirstDemo : public bcwasm::Contract
+        {
+            public:
+                FirstDemo(){}
+    
+                /// 实现父类: bcwasm::Contract 的虚函数
+                /// 该函数在合约首次发布时执行，仅调用一次
+                void init() 
+                {
+                    bcwasm::println("init success...");
+                }
+    
+    
+            public:
+                void setName(const char *msg)
+                {    
+                    // 定义状态变量
+                    bcwasm::setState("NAME_KEY", std::string(msg));
+                }
+    
+                const char* getName() const 
+                {
+                    std::string value;
+                    bcwasm::getState("NAME_KEY", value);
+                    // 读取合约数据并返回
+                    return value.c_str();
+                }
+        };
+    }
+    
+    // 此处定义的函数会生成ABI文件供外部调用
+    BCWASM_ABI(demo::FirstDemo, setName)
+    BCWASM_ABI(demo::FirstDemo, getName)
+    ```
 
-namespace demo {
-    class FirstDemo : public bcwasm::Contract
-    {
-        public:
-            FirstDemo(){}
-
-            /// 实现父类: bcwasm::Contract 的虚函数
-            /// 该函数在合约首次发布时执行，仅调用一次
-            void init() 
-            {
-                bcwasm::println("init success...");
-            }
-
-
-        public:
-            void setName(const char *msg)
-            {    
-                // 定义状态变量
-                bcwasm::setState("NAME_KEY", std::string(msg));
-            }
-
-            const char* getName() const 
-            {
-                std::string value;
-                bcwasm::getState("NAME_KEY", value);
-                // 读取合约数据并返回
-                return value.c_str();
-            }
-    };
-}
-
-// 此处定义的函数会生成ABI文件供外部调用
-BCWASM_ABI(demo::FirstDemo, setName)
-BCWASM_ABI(demo::FirstDemo, getName)
-```
-
-​	合约编译后会产生demo.cpp.abi.json和demo.wasm，在生成java合约代码时需要用到这两个文	件。
-
-	2. 使用合约骨架生成工具生成java合约骨架：
-
-```shell
-cd PlatONE-Workspace/java-sdk/bin
-
-./client-sdk wasm generate --javaTypes      \
-        </path/to/demo.wasm>                \
-        </path/to/demo.cpp.abi.json>        \
-        -o </path/to/src/main/java>         \
-        -p <com.your.organisation.name>     \
-        -t wasm
-```
-
-说明：把尖括号内的内容替换成自己的内容。
-
-运行后会生成合约对应的java类。
-
-java类中包含了合约中的方法，方便在应用层中调用合约。
+​	合约编译后会产生demo.cpp.abi.json和demo.wasm，在生成java合约代码时需要用到这两个文件。
 
 
 
-合约操作
+2. 使用合约骨架生成工具生成java合约骨架：
+
+   ```shell
+   cd java_sdk_linux_v0.9.0/java-sdk/bin
+   ./client-sdk wasm generate --javaTypes      \
+           </path/to/demo.wasm>                \
+           </path/to/demo.cpp.abi.json>        \
+           -o </path/to/src/main/java>         \
+           -p <com.your.organisation.name>     \
+           -t wasm
+   ```
+   
+   
+   说明：把尖括号内的内容替换成自己的内容。
+   
+   运行后会生成合约对应的java类。
+   
+   java类中包含了合约中的方法，方便在应用层中调用合约。
+
+
+
+ 合约操作
 
 1. 部署合约
 
@@ -206,7 +209,7 @@ java类中包含了合约中的方法，方便在应用层中调用合约。
      //optional    
      class NodeConfiguration {
              public static final String WALLETSOURCE = "/home/username/Work/PlatONE/data/keystore/keyfile.json";
-             public static final String DEMOBIN = "/home/user/Work/client-sdk-0.4.0/contract/firstdemo.wasm";
+             public static final String DEMOBIN = "/home/user/Work/client-sdk-0.4.1/contract/firstdemo.wasm";
          }
    
      //建立连接
@@ -246,6 +249,10 @@ java类中包含了合约中的方法，方便在应用层中调用合约。
 
 3. 调用合约示例
 
+   在合约部署后，客户端可以通过合约地址进行合约调用。
+   
+   1. 合约地址
+   
    ```java
    public  static void main(String args[]) {
    
@@ -270,59 +277,89 @@ java类中包含了合约中的方法，方便在应用层中调用合约。
            System.out.println("getName: " +  demo.getName().send());
    
        }catch (Exception e){
-           System.out.println(e);
+        System.out.println(e);
        }
    }
    ```
-
+   
+   2. 合约名称
+   
+   ```java
+   public static void main(String[] args) {
+   	try {
+   		Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:6791"));
+           Credentials credentials = WalletUtils.loadCredentials("1", "/home/wxuser/keyfile.json");
+           byte[] dataBytes = Files.readBytes(new File("/home/user/PlatONE-Workspace-0.2/contracts/build/appContract/demo/demo.wasm"));
+           String binData = Hex.toHexString(dataBytes);
+           // load contract
+           CnsManager cns = CnsManager.load(null, "0x0000000000000000000000000000000000000011", web3j, credentials, new DefaultWasmGasProvider());
+   		TransactionReceipt r = cns.cnsRegister("demo", "1.0.0.0", "0x1d7f2695b43be56f52f24baa199420f8c10ac1d3").send();
+   		if (r.isStatusOK()){
+   			Demo d = Demo.load(null, "demo", web3j, c, new DefaultWasmGasProvider());
+   			d.setName("cns").send();
+   			System.out.println(d.getName().send());
+               }
+   
+   	} catch (Exception e) {
+   		e.printStackTrace();
+   	} finally {
+   		System.out.println("Done...");
+       }
+    }
+   ```
+   
    
 
-   订阅事件:
+订阅事件:
 
-   订阅区块:
+1. 订阅区块:
 
    在新区块产生时，client可以得到节点的区块数据推送。
 
-```java
-Subscription sub = web3j.blockObservable(false).subscribe( block -> {          
-    System.out.println(block.getBlock().getNumber());
-});
-```
+   ```java
+   Subscription sub = web3j.blockObservable(false).subscribe( block -> {          
+       System.out.println(block.getBlock().getNumber());
+   });
+   ```
+   
+   
+   
+2. 订阅event:
+   
+   在合约中可以自定义事件，client通过订阅事件的方式来获悉合约调用中所触发的事件。
+   
+   合约中定义如下的event，每次setName被调用时，就会触发该event。
+   
+   ```c++
+   // event定义
+   BCWASM_EVENT(setName, const char *)
+   
+   void setName(const char *msg)
+   {
+       // 定义状态变量
+       bcwasm::setState("NAME_KEY", std::string(msg));
+       // 日志输出
+       // 事件返回
+       BCWASM_EMIT_EVENT(setName, "std::string(msg)");
+   }
+   ```
+   
+   ```java
+   String contractAddress = "0x1d7f2695b43be56f52f24baa199420f8c10ac1d3";
+   String eventHash = Hash.sha3String("setName");
+   
+   EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST,contractAddress).addSingleTopic(eventHash);
+   
+   Subscription subTx = web3j.ethLogObservable(filter).subscribe(log -> {
+       System.out.println("output: " + log.getData());
+   }
+   ```
+   
+   说明：Filter实例化的输入，第三个是合约的地址，第四个是Topic的哈希值（SHA-3），返回结果中log的Data字段是事件值的rlp编码。
 
-​	订阅event:
+​	
 
-​	在合约中可以自定义事件，client通过订阅事件的方式来获悉合约调用中所触发的事件。
-
-​	合约中定义如下的event，每次setName被调用时，就会触发该event。
-
-```c++
-// event定义
-BCWASM_EVENT(setName, const char *)
-
-void setName(const char *msg)
-{
-    // 定义状态变量
-    bcwasm::setState("NAME_KEY", std::string(msg));
-    // 日志输出
-    // 事件返回
-    BCWASM_EMIT_EVENT(setName, "std::string(msg)");
-}
-```
-
-```java
-String contractAddress = "0x1d7f2695b43be56f52f24baa199420f8c10ac1d3";
-String eventHash = Hash.sha3String("setName");
-
-EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST,contractAddress).addSingleTopic(eventHash);
-
-Subscription subTx = web3j.ethLogObservable(filter).subscribe(log -> {
-    System.out.println("output: " + log.getData());
-}
-```
-
-​	说明：Filter实例化的输入，第三个是合约的地址，第四个是Topic的哈希值（SHA-3），返回结果中log的Data字段是事件值的rlp编码
-
-​	web3 api调用:
+web3 api调用:
 
 ```java
 web3j.ethBlockNumber(); // 当前最新区块高度
