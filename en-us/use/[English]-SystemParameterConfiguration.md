@@ -1,77 +1,74 @@
 
-### 是否出空块
+### Whether to generate empty blocks
 
-PlatONE默认配置是不出空块，当用于需要出空块时，可以通过系统合约更改配置。
+Empty blocks are not generated in the default configuration. When needed to generate empty blocks, the configuration can be changed through the system contract.
 
-查询是否出空块，1表示出空块，0表示不出空块
+Query whether generate empty blocks, 1 means yes, 0 means no.
+
 ```shell
-#先切换到ctool所在目录下，{WORKSPACE}路径参考快速指南
+# Switch to the directory where ctool is located, please reference the quick guide to find  {WORKSPACE} path.
 cd ${WORKSPACE}/bin
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func getIsProduceEmptyBlock
 ```
 
-设置为出空块
-
-```shell
+Switch to generate empty blocks
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func setIsProduceEmptyBlock --param 1
 ```
 
-设置为不出空块
+Switch to not generate empty blocks
 
-```shell
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func setIsProduceEmptyBlock --param 0
 ```
 
-### 区块gaslimit
+### Block gaslimit
 
-PlatONE采用区块gaslimit限制一个区块中所有交易的最大运算量，该值是通过系统合约管理的，可以通过如下的方式查询管理。
+PlatONE uses the block gaslimit to limit the maximum amount of calculations for all transactions in a block. This value is managed by the system contract and can be queried by the following methods.
 
-查询当前区块gaslimit
+Query the current block gaslimit
 
-```shell
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func getBlockGasLimit
 ```
 
-设置新的区块gaslimit
+Set new block gaslimit
 
-```shell
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func setBlockGasLimit --param 20000000000
 ```
 
-### 交易gasLimit
-PlatONE采用交易gaslimit限制一个交易的最大运算量，该值是通过系统合约管理的，可以通过如下的方式查询管理。
+### Transaction gaslimit
+PlatONE  limits the maximum amount of calculations for a transaction by the transaction gaslimit . This value is managed by the system contract and can be queried and managed as follows.
 
-查询当前交易gaslimit
+Query current transaction gaslimit
 
-```shell
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func getTxGasLimit
 ```
 
-设置新的交易gaslimit
+Set new transaction gaslimit
 
-```shell
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func setTxGasLimit --param 2000000000
 ```
+### Whether  to check contract deployment permissions
+You can check  the contract deployment permissions in PlatONE. For details, see the permissions model section.
 
-### 是否检查合约部署权限
-PlatONE支持对合约部署权限进行检查，具体权限范围参见权限模型章节
+Query whether to check contract deployment permissions
 
-查询是否检查合约部署权限
-
-```shell
-# 0表示不检查，任意用于可以部署合约，1表示检查只有特定用户才可以部署合约
+```
+# 0 means  arbitrarily used to deploy the contract without check, 1 means it need to be checked and only certain users can deploy the contract
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func getCheckContractDeployPermission
 ```
 
-启用合约部署权限检查
+Check contract deployment permission 
 
-```shell
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func setCheckContractDeployPermission --param 1
 ```
-关闭合约部署权限检查
+Stop contract deployment permission check
 
-```shell
+```
 ./ctool  cnsInvoke --cns __sys_ParamManager --abi ../conf/contracts/paramManager.cpp.abi.json --config ../conf/ctool.json --func setCheckContractDeployPermission --param 0
 ```
-
-

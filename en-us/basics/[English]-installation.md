@@ -16,4 +16,5 @@ This document provides two ways to install and start PlatoONE:
    - [PlatONE Manually Deploy Command Tutorial](en-us/basics/Installation/[English]-detailDeploy.md)
 
 - Quick install and launch: This document combines multiple steps in the PlatONE boot process to synthesize a single script command to quickly compile and launch PlatONE. For users who have a certain understanding of PlatONE, to quickly build the chain. And gave corresponding suggestions in terms of operation and maintenance.
-   - [PlatONE Chain Deployment Tutorial](en-us/basics/Installation/[English]-quickDeploy.md)
+   - [PlatONE Script Deployment Tutorial](en-us/basics/Installation/[English]-scriptDeploy.md)
+

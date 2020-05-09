@@ -1,26 +1,34 @@
 `Quickstart: Installing and running PlatONE nodes`
-## Installing PlatONE
-PlatONE supports Linux operating environments，Please refer to the [Installation Guide](en-us/basics/[English]-installation) to install PlatONE.
 
-We assumes that the working directory is ~/PlatONE-Workspace on Ubuntu. Note that the following operations are performed in the working directory.
 ## Building a private network
-If you want to test or run PlatONE locally，see [Installation Guide](en-us/basics/[English]-installation), or the instructions below.
+If you want to test or run PlatONE locally, see [Installation Guide](en-us/basics/[English]-installation), or the instructions below.
 
 ```bash
-# 获取PlatONE源码
+# environment
+# g++ 7.3+
+# cmake 3.10+
+# go 1.11.4+
+
+# get PlatONE source code 
 git clone --recursive https://github.com/PlatONEnterprise/PlatONE-Go.git
 export WORKSPACE=${PWD}/PlatONE-Go/release/linux
-# 编译PlatONE
+# compile the PlatONE
 cd PlatONE-Go; make all; cd ..
-# 如果编译失败. 请确保你安装了 1.3.1中全部软件. 然后重新尝试.
 ```
 
 ### Quickly build a chain
-You can use a script to quickly build a four-node chain for testing.
+You can use a script to quickly build a one-node chain or four-node chain for testing.
 ```
 cd ${WORKSPACE}/scripts
-./plantonectl.sh four
+
+# build a one-node chain
+./platonectl.sh one
+
+# build a four-node chain
+# ./platonectl.sh four
 ```
+
+After a chain was built successfully, the data of the node will be generated in the directory `${WORKSPACE}/data/`. The log file can be used to watch the status of the node. For example, the node-0's log is located in the directory `${WORKSPACE}/data/node-0/logs/platone_log/`.
 
 ## Create a PlatONE account
 Before sending a transaction, you need to create an account.
@@ -31,8 +39,8 @@ cd ${WORKSPACE}/../../cmd/SysContracts/
 ./script/create_accout.sh --ip 127.0.0.1 --rpc_port 6791
 ```
 
-This command will create a new account, you need to enter an account password when creating, to facilitate unlocking you account.
-The results are as follows:
+By this command you can create a new account, you need to enter an account password when creating, to facilitate unlocking you account.
+The results are as follows, the account's address is recorded in the file `./config.json`:
 
 ```
 nodeid: 127.0.0.1
@@ -43,7 +51,7 @@ rpc_port: 6791
 ###########################################
 
 Input account passphrase.
-passphrase: 000
+passphrase: your_phrase 
 --output{"jsonrpc":"2.0","id":1,"result":"0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c"} --output
 New account: 0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c
 {"jsonrpc":"2.0","id":1,"result":true}
@@ -65,20 +73,34 @@ Once a account does not send transactions for a long time, or the node is restar
 cd ${WORKSPACE}/../../cmd/SysContracts/
 ./script/unlock_accout.sh \
             --account 0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c \
-            --phrase "your phrase"
+            --phrase "your_phrase" \
             --ip 127.0.0.1 \
             --rpc_port 6791
 ```
+
+## Create and compile user's contract
+Start by creating a default contract with the following command, which contains two basic methods, `setName` and `getName`, on which the user can write contract.
+
+```
+cd ${WORKSPACE}/../../cmd/SysContracts/
+# create default contract
+./script/autoprojectForApp.sh  . my_contract
+
+# compile the contract
+./script/autoprojectForApp.sh  .
+```
+The generated contract source file is `${WORKSPACE}/../../cmd/SysContracts/appContract/my_contract/my_contract.cpp`.
+
 ## Deploy contract
 
 ```
 cd ${WORKSPACE}/../../cmd/SysContracts/build
 
 # ctool is used for deploying contracts and sending transactions
-cp ../../chain/PlatONE_linux/bin/ctool .  
+cp ${WORKSPACE}/bin/ctool .  
 
 # deploy contract
-./ctool deploy --abi appContract/appDemo/appDemo.cpp.abi.json --code appContract/appDemo/appDemo.wasm --config ../config.json
+./ctool deploy --abi appContract/my_contract/my_contract.cpp.abi.json --code appContract/my_contract/my_contract.wasm --config ../config.json
 ```
 
 the result is as follows:
@@ -88,10 +110,10 @@ contract address: 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206
 ```
 ## Invoke contract
 
-invoke the `invokeNotify` method in contract
+invoke the `setName` method in contract
 
 ```
-./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/appDemo/appDemo.cpp.abi.json   --config ./config.son  --func "invokeNotify" --param "wxbc"  
+./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/my_contract/my_contract.cpp.abi.json   --config ../config.json  --func "setName" --param "wxbc"  
 
  request json data：[{"from":"0x32ab0a20b589f40c7e3d6ee485a2404bb7269f87","to":"0x2ee8d0545ebd20f9a992ff54cb0f21a153539206","gas":"0x0","gasPrice":"0x0","value":"","data":"0xdb8800000000000000028c696e766f6b654e6f746966798477786263","txType":2}] 
 
@@ -101,7 +123,7 @@ invoke the `invokeNotify` method in contract
 invoke the `getName` method in contract
 
 ```
-./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/appDemo/appDemo.cpp.abi.json   --config ./config.json  --func getName
+./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/my_contract/my_contract.cpp.abi.json   --config ../config.json  --func getName
 
 request json data：[{"from":"0x32ab0a20b589f40c7e3d6ee485a2404bb7269f87","to":"0x2ee8d0545ebd20f9a992ff54cb0f21a153539206","gas":"0x0","gasPrice":"0x0","value":"","data":"0xd1880000000000000002876765744e616d65","txType":2},"latest"] 
 

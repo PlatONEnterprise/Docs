@@ -70,26 +70,26 @@ type Account struct {
 ```go
 func (self *StateDB) RawDump() Dump {
    dump := Dump{
-      Root:     fmt.Sprintf("%x", self.trie.Hash()),
-      Accounts: make(map[string]DumpAccount),
+      Root:     fmt.Sprintf("%x"，self.trie.Hash())，
+      Accounts: make(map[string]DumpAccount)，
    }
 
    it := trie.NewIterator(self.trie.NodeIterator(nil))
    for it.Next() {
       addr := self.trie.GetKey(it.Key)
       var data Account
-      if err := rlp.DecodeBytes(it.Value, &data); err != nil {
+      if err := rlp.DecodeBytes(it.Value，&data); err != nil {
          panic(err)
       }
 
-      obj := newObject(nil, common.BytesToAddress(addr), data)
+      obj := newObject(nil，common.BytesToAddress(addr)，data)
       account := DumpAccount{
-         Balance:  data.Balance.String(),
-         Nonce:    data.Nonce,
-         Root:     common.Bytes2Hex(data.Root[:]),
-         CodeHash: common.Bytes2Hex(data.CodeHash),
-         Code:     common.Bytes2Hex(obj.Code(self.db)),
-         Storage:  make(map[string]string),
+         Balance:  data.Balance.String()，
+         Nonce:    data.Nonce，
+         Root:     common.Bytes2Hex(data.Root[:])，
+         CodeHash: common.Bytes2Hex(data.CodeHash)，
+         Code:     common.Bytes2Hex(obj.Code(self.db))，
+         Storage:  make(map[string]string)，
       }
       storageIt := trie.NewIterator(obj.getTrie(self.db).NodeIterator(nil))
       for storageIt.Next() {
@@ -108,7 +108,7 @@ func (self *StateDB) RawDump() Dump {
 
 1. 参考合约防火墙方案，
 
-   * 在`ctool/contractcmd.go `中添加`migInvoke(fromAddr String, toAddr String)`方法。
+   * 在`ctool/contractcmd.go `中添加`migInvoke(fromAddr String，toAddr String)`方法。
 
    * 参数指定需要迁移数据的老合约，以及需要迁入数据的新合约。
 
@@ -124,7 +124,7 @@ func (self *StateDB) RawDump() Dump {
 
    ```
    if msg.TxType() == types.MigrateTxType {
-   	ret, st.gas, vmerr = migProcess(evm.StateDB, st.to(), msg.From(), msg.Data())
+   	ret，st.gas，vmerr = migProcess(evm.StateDB，st.to()，msg.From()，msg.Data())
    } 
    ```
 

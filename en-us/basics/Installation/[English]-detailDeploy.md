@@ -1,5 +1,7 @@
 # PlatONE Manually Deploy Command Tutorial
 
+The first chapter of this document describes the environment that PlatONE needs to run. It is recommended that users pre-install the software in this chapter before proceeding with the subsequent chapters. The second chapter explains in detail how PlatONE is compiled and deployed, and gives specific details. The steps are explained in Section 3, which demonstrates how to initialize and start PlatONE; Chapter 4 explains the deployment and invocation of system contracts.
+
 # 1. Preparations
 
 The warehouse address for PlatONE git is:
@@ -100,19 +102,14 @@ make all
   /home/wxuser/work/golang/src/github.com/PlatONEnetwork/PlatONE-Go/build/bin/data/platone/nodekey
   ```
 
-### 3.1.2. Generate cnsManager Bytecode File
+### 3.1.2. Generate cnsProxy Bytecode File
 
 - go to path `PlatONE-Go/cmd/SysContracts` and execute script to generate makefile
 
   ```
-  ./script/autoproject.sh .
+  ./script/build_system_contracts.sh
   ```
 
-- go to `PlatONE-Go/cmd/SysContracts/build`, compile contract to generate 'wasm' file
-
-  ```
-  make
-  ```
 
 Now, the "systemContract" folder which stores compiled files will be generate in path `build`
 
@@ -278,6 +275,15 @@ More platone startup parameters, you can execute the following command to view.
 platone -h 
 ```
 
+### 3.3 Reset Node
+
+When you have to reset your platone node, make sure platone process has been killed, and then delete the `data` folder. (If you need to follow the next chapter steps, this process needs to be omitted first)
+
+```console
+$ rm -rf data/platone
+```
+
+After that you can init your node again.
 
 # 4. System contract deployment
 
@@ -352,14 +358,52 @@ ctool deploy --config ctool.json --code nodeManager/nodeManager.wasm --abi nodeM
 ctool deploy --config ctool.json --code nodeRegister/nodeRegister.wasm --abi nodeRegister/nodeRegister.cpp.abi.json
 ```
 
-# 5. Reset Node
+**System Contract Description**
 
-When you have to reset your platone node, make sure platone process has been killed, and then delete the `data` folder.
+* cnsManager: Maps the contract name to contract information (contract address and version, etc.).
+* paramManager: can dynamically follow some system parameters during the new PlatONE run.
+* userManager: Manage users and user information in PlatONE.
+* userRegister: Provides the ability to apply for registration as a platform user.
+* roleManager: The permissions of the roles and roles of the management platform.
+* roleRegister: Provides the ability to apply for registration to get the platform role.
+* nodeManager: Management node and node information.
+* nodeRegister: Provides the ability to apply for registration as a platform node (not necessary).
 
-```console
-$ cd build/bin
+### 4.3 System Contract Call
 
-$ rm -rf data/platone
+This section will demonstrate how system contracts are invoked by adding nodes, viewing all nodes, and updating node information.
+
+First enter the `PlatONE-Go/cmd/SysContracts/build/systemContract` directory
+
+**Add Nodes**
+
+```bash
+ctool cnsInvoke --cns "__sys_NodeManager" --config ctool.json --abi nodeManager/nodeManager.cpp.abi.json --func add --param '{"name":"test","type":0," publicKey ":" 68bb049008c7226de3188b6376127354507e1b1e553a2a8b988bb99b33c4d995e426596fc70ce12f7744100bc69c5f0bce748bc298bf8f0d0de1f5929850b5f4 "," desc ":" "," externalIP ":" 127.0.0.1 "," internalIP ":" 127.0.0.1 "," rpcPort ": 6792," p2pPort ": 16792," owner ": "", "status": 1} '
 ```
 
-After that you can init your node again.
+Where option `--param` part parameters:
+
+* name: The name of the node. In a node management contract, the node name must be unique.
+* type: node type. Type is 0 for the observer node and type 1 for the consensus node. When adding a node, the type is set to 0. After the node runs stably, you can update the node information setting type to 1, and let the node participate in the consensus.
+* publicKey: The node public key. The node public key is available in section 4 of section 3.1.1.
+* status: Node status. When the status is set to 1, it indicates that the node is in a normal state and can be connected to other nodes. When the status is set to 2, it indicates that the node is in the deleted state, and the connection with other nodes will be disconnected.
+
+**View all nodes**
+
+After adding the node, run the following command to view all the information about all the added nodes in the system contract at this time:
+
+```bash
+ctool cnsInvoke --cns "__sys_NodeManager" --config ctool.json --abi nodeManager/nodeManager.cpp.abi.json --func "getAllNodes"
+```
+
+**Update node information**
+
+When you need to follow the new node information, you need to call the node management contract update method. If you convert a normal node to a consensus node, the command is as follows:
+
+```bash
+ctool cnsInvoke --cns "__sys_NodeManager" --config ctool.json --abi nodeManager/nodeManager.cpp.abi.json --func "update" --param "test" --param '{"type":1}'
+```
+
+In this command, the first param option specifies the name of the node to be updated, and the second param option specifies the information of the node that needs to be updated.
+
+

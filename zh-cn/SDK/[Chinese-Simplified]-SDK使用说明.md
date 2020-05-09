@@ -2,108 +2,111 @@
 
 PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发工具包，提供了在应用层（java 代码）访问区块链节点并获取服务的接口，比如部署合约、调用合约、查询链上数据等。
 
-## 快速入门
+## 下载与安装
 
- 安装或导入
+请首先下载SDK最新版本的发布包，[下载地址](https://github.com/PlatONEnterprise/PlatONE-Go/releases)。
 
- 1. 环境要求：jdk1.8
+将发布包解压到本地目录，如下所示：
 
- 2. maven配置
+```shell
+# 下载
+wget https://github.com/PlatONEnterprise/PlatONE-Go/releases/download/v0.9.0/java_sdk_linux_v0.9.0.tar.gz
+# 解压
+tar -zxvf java_sdk_linux_v0.9.0.tar.gz && export SDKPATH=java-sdk
+```
 
-    ```shell
-    # 依赖工具安装
-    sudo apt install cmake g++ maven
-    
-    # 安装maven依赖
-    cd PlatONE-Workspace/java-sdk/bin
-    ./mvn.sh 
-    ```
+安装依赖环境
 
-    在maven配置文件中添加如下的依赖项：
+```shell
+# java版本：jdk1.8
+sudo apt install cmake g++ maven
+# 安装maven依赖
+cd ${SDKPATH}/bin && ./mvn.sh 
+```
 
-    ```js
-     <dependencies>
-            <dependency>
-                <groupId>com.platone.client</groupId>
-                <artifactId>core</artifactId>
-                <version>0.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.platone.client</groupId>
-                <artifactId>crypto</artifactId>
-                <version>0.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.platone.client</groupId>
-                <artifactId>abi</artifactId>
-                <version>0.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.platone.client</groupId>
-                <artifactId>rlp</artifactId>
-                <version>0.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.platone.client</groupId>
-                <artifactId>tuples</artifactId>
-                <version>0.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.platone.client</groupId>
-                <artifactId>utils</artifactId>
-                <version>0.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.5</version>
-            </dependency>
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>3.8.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>logging-interceptor</artifactId>
-                <version>3.8.1</version>
-            </dependency>
-            <dependency>
-                <groupId>io.reactivex</groupId>
-                <artifactId>rxjava</artifactId>
-                <version>1.2.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.java-websocket</groupId>
-                <artifactId>Java-WebSocket</artifactId>
-                <version>1.3.8</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.jnr</groupId>
-                <artifactId>jnr-unixsocket</artifactId>
-                <version>0.15</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>2.8.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>1.54</version>
-            </dependency>
-        </dependencies>
-    ```
+创建java项目并在maven配置文件中添加如下的依赖项：
 
+```js
+    <dependencies>
+        <dependency>
+            <groupId>com.platone.client</groupId>
+            <artifactId>core</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.platone.client</groupId>
+            <artifactId>crypto</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.platone.client</groupId>
+            <artifactId>abi</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.platone.client</groupId>
+            <artifactId>rlp</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.platone.client</groupId>
+            <artifactId>tuples</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.platone.client</groupId>
+            <artifactId>utils</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-unixsocket</artifactId>
+            <version>0.15</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.54</version>
+        </dependency>
+    </dependencies>
+```
 
-
-初始化
+## 连接节点
 
 1. 首先需要与PlatONE节点建立连接，以获取链上有关服务。PlatONE支持建立http连接和websocket连接两种方式。
 
@@ -115,7 +118,7 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
    ```java
    //ws长连接
    WebSocketClient webSocketClient = new WebSocketClient(newURI("ws://127.0.0.1:6791"));
-   WebSocketService ws = new WebSocketService(webSocketClient,true);
+   WebSocketService ws = new WebSocketService(webSocketClient，true);
    ws.connect();
    Web3j web3j = Web3j.build(ws);
    ```
@@ -128,18 +131,20 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
 
 ​	
 
-## 合约
+## 合约交互
 
-​	合约骨架生成
+为了方便在java项目中调用链上合约，需要首先生成合约对应的java类，在项目中创建合约类实例后，便可以调用合约。
 
- 1. 编写合约(以demo为例)，编写合约的步骤请参阅《PlatONE合约初级教程》。
+### 合约骨架生成
 
-    ```c++
+ 1. 编写合约(以demo为例)，编写合约的步骤请参阅[Wasm合约指南](zh-cn/WASMContract/[Chinese-Simplified]-合约教程.md)。
+    
+    ```cpp
     #include <stdlib.h>
     #include <string.h>
     #include <string>
     #include <bcwasm/bcwasm.hpp>
-    
+
     namespace demo {
         class FirstDemo : public bcwasm::Contract
         {
@@ -151,29 +156,26 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
                 void init() 
                 {
                     bcwasm::println("init success...");
-                }
-    
-    
+                }       
             public:
                 void setName(const char *msg)
                 {    
                     // 定义状态变量
-                    bcwasm::setState("NAME_KEY", std::string(msg));
+                    bcwasm::setState("NAME_KEY"，std::string(msg));
                 }
     
                 const char* getName() const 
                 {
                     std::string value;
-                    bcwasm::getState("NAME_KEY", value);
+                    bcwasm::getState("NAME_KEY"，value);
                     // 读取合约数据并返回
                     return value.c_str();
                 }
         };
-    }
-    
+    }    
     // 此处定义的函数会生成ABI文件供外部调用
-    BCWASM_ABI(demo::FirstDemo, setName)
-    BCWASM_ABI(demo::FirstDemo, getName)
+    BCWASM_ABI(demo::FirstDemo，setName)
+    BCWASM_ABI(demo::FirstDemo，getName)
     ```
 
 ​	合约编译后会产生demo.cpp.abi.json和demo.wasm，在生成java合约代码时需要用到这两个文件。
@@ -201,7 +203,7 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
 
 
 
- 合约操作
+### 合约操作
 
 1. 部署合约
 
@@ -216,12 +218,12 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
      Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:6791"));
    
      //加载钱包
-     Credentials credentials = WalletUtils.loadCredentials("<wallet password>", NodeConfiguration.WALLETSOURCE);
+     Credentials credentials = WalletUtils.loadCredentials("<wallet password>"，NodeConfiguration.WALLETSOURCE);
                  
      //部署合约  
      byte[] dataBytes = Files.readBytes(new File(NodeConfiguration.DEMOBIN));
      String binData = Hex.toHexString(dataBytes);
-     Firstdemo demo = Firstdemo.deploy(web3j, credentials, binData, new DefaultWasmGasProvider()).send();
+     Firstdemo demo = Firstdemo.deploy(web3j，credentials，binData，new DefaultWasmGasProvider()).send();
    ```
 
 2. 加载合约
@@ -237,12 +239,12 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
      Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:6791"));
    
      //加载钱包
-     Credentials credentials = WalletUtils.loadCredentials("<wallet password>", NodeConfiguration.WALLETSOURCE);
+     Credentials credentials = WalletUtils.loadCredentials("<wallet password>"，NodeConfiguration.WALLETSOURCE);
      
      //加载合约
      byte[] dataBytes = Files.readBytes(new File(NodeConfiguration.DEMOBIN));
      String binData = Hex.toHexString(dataBytes);
-     Firstdemo contract = Firstdemo.load(binData, “<contract address>”, web3j, credentials, new DefaultWasmGasProvider());
+     Firstdemo contract = Firstdemo.load(binData，“<contract address>”，web3j，credentials，new DefaultWasmGasProvider());
    ```
 
    
@@ -259,15 +261,15 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
        Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:6791"));
    
        try {
-           // 密钥账户， keyfile.json为ethkey工具生成的账户文件，参照《PlatONE密钥工具文档》
-           Credentials credentials = WalletUtils.loadCredentials("1", "/home/wxuser/keyfile.json");
+           // 密钥账户，keyfile.json为ethkey工具生成的账户文件，参照《PlatONE密钥工具文档》
+           Credentials credentials = WalletUtils.loadCredentials("1"，"/home/wxuser/keyfile.json");
            
            // 合约数据
            byte[] dataBytes = Files.readBytes(new File("/home/user/PlatONE-Workspace-0.2/contracts/build/appContract/demo/demo.wasm"));
            String binData = Hex.toHexString(dataBytes);
    
            // 加载合约
-           Demo demo = Demo.load(binData,"0x1d7f2695b43be56f52f24baa199420f8c10ac1d3", web3j, credentials, new DefaultWasmGasProvider());
+           Demo demo = Demo.load(binData，"0x1d7f2695b43be56f52f24baa199420f8c10ac1d3"，web3j，credentials，new DefaultWasmGasProvider());
    
            // 调用demo合约的setName方法，参数输入字符串"platone"
            TransactionReceipt ret = demo.setName("platone").send();
@@ -288,14 +290,14 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
    public static void main(String[] args) {
    	try {
    		Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:6791"));
-           Credentials credentials = WalletUtils.loadCredentials("1", "/home/wxuser/keyfile.json");
+           Credentials credentials = WalletUtils.loadCredentials("1"，"/home/wxuser/keyfile.json");
            byte[] dataBytes = Files.readBytes(new File("/home/user/PlatONE-Workspace-0.2/contracts/build/appContract/demo/demo.wasm"));
            String binData = Hex.toHexString(dataBytes);
            // load contract
-           CnsManager cns = CnsManager.load(null, "0x0000000000000000000000000000000000000011", web3j, credentials, new DefaultWasmGasProvider());
-   		TransactionReceipt r = cns.cnsRegister("demo", "1.0.0.0", "0x1d7f2695b43be56f52f24baa199420f8c10ac1d3").send();
+           CnsManager cns = CnsManager.load(null，"0x0000000000000000000000000000000000000011"，web3j，credentials，new DefaultWasmGasProvider());
+   		TransactionReceipt r = cns.cnsRegister("demo"，"1.0.0.0"，"0x1d7f2695b43be56f52f24baa199420f8c10ac1d3").send();
    		if (r.isStatusOK()){
-   			Demo d = Demo.load(null, "demo", web3j, c, new DefaultWasmGasProvider());
+   			Demo d = Demo.load(null，"demo"，web3j，c，new DefaultWasmGasProvider());
    			d.setName("cns").send();
    			System.out.println(d.getName().send());
                }
@@ -310,7 +312,7 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
    
    
 
-订阅事件:
+### 订阅事件:
 
 1. 订阅区块:
 
@@ -332,15 +334,15 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
    
    ```c++
    // event定义
-   BCWASM_EVENT(setName, const char *)
+   BCWASM_EVENT(setName，const char *)
    
    void setName(const char *msg)
    {
        // 定义状态变量
-       bcwasm::setState("NAME_KEY", std::string(msg));
+       bcwasm::setState("NAME_KEY"，std::string(msg));
        // 日志输出
        // 事件返回
-       BCWASM_EMIT_EVENT(setName, "std::string(msg)");
+       BCWASM_EMIT_EVENT(setName，"std::string(msg)");
    }
    ```
    
@@ -348,7 +350,7 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
    String contractAddress = "0x1d7f2695b43be56f52f24baa199420f8c10ac1d3";
    String eventHash = Hash.sha3String("setName");
    
-   EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST,contractAddress).addSingleTopic(eventHash);
+   EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST，DefaultBlockParameterName.LATEST，contractAddress).addSingleTopic(eventHash);
    
    Subscription subTx = web3j.ethLogObservable(filter).subscribe(log -> {
        System.out.println("output: " + log.getData());
@@ -359,7 +361,7 @@ PlatONE Java SDK是面向java开发者，提供的PlatONE联盟链的java开发�
 
 ​	
 
-web3 api调用:
+### web3 api调用:
 
 ```java
 web3j.ethBlockNumber(); // 当前最新区块高度

@@ -16,7 +16,6 @@
 </head>
 <body>
   <div id="app">  </div>
-  <div class="cusImg">Developers</div>
   
   <!-- 导航栏 -->
     <!-- 导航栏 -->
@@ -26,7 +25,7 @@
   </navbar> -->
   <script>
     window.$docsify = {
-      navbar:true,
+      navbar:false,
 	  // name: '<img src="assets/Group.svg" data-origin="assets/logo.png" alt="Style Dictionary logo" class="sidebar-logo">Style Dictionary',
 	  coverpage: false,
 	  auto2top: true,
@@ -36,19 +35,23 @@
           maxLevel: 4,
 	  loadSidebar: true,
 	  mergeNavbar: true,
-          repo: '',
+          repo: 'https://github.com/PlatONEnterprise/PlatONE-Go.git',
 
 	  themeable: {
           readyTransition : true, // default
           responsiveTables: true  // default
       },
 
-    homepage: '/en-us/README.md',
-
+    homepage: '/zh-cn/README.md',
+   
     alias: {
-	  '/_navbar.md': '/en-us/_navbar.md',
-	  '/_sidebar.md': '/en-us/_sidebar.md',
-    
+	  '/_navbar.md': '/zh-cn/_navbar.md',
+	  '/_sidebar.md': '/zh-cn/_sidebar.md',
+    '/zh-cn/basics/_sidebar.md':'/zh-cn/_sidebar.md',
+    '/zh-cn/function/_sidebar.md':'/zh-cn/_sidebar.md',
+    '/zh-cn/SDK/_sidebar.md':'/zh-cn/_sidebar.md',
+    '/zh-cn/use/_sidebar.md':'/zh-cn/_sidebar.md',
+    '/zh-cn/WASMContract/_sidebar.md':'/zh-cn/_sidebar.md',   
     },
       
       // 完整配置参数
@@ -84,6 +87,7 @@
   </script>
   <script src="//unpkg.com/docsify@4.8.6/lib/docsify.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-scss.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-json.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-c.min.js"></script>
