@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PlatONE快速部署 - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PlatONE\u5feb\u901f\u90e8\u7f72", url: "#_top", children: [
+              {title: "1. PlatONE\u6e90\u7801\u4e0b\u8f7d\u53ca\u7f16\u8bd1", url: "#1-platone" },
+              {title: "2. \u5355\u673a\u90e8\u7f72\uff08\u9002\u7528\u4e8e\u7b80\u5355\u6d4b\u8bd5\u73af\u5883\uff09", url: "#2" },
+              {title: "3. \u591a\u673a\u90e8\u7f72\uff08\u9002\u7528\u4e8e\u751f\u4ea7\u73af\u5883/\u591a\u673a\u6d4b\u8bd5\u73af\u5883\uff09", url: "#3" },
+              {title: "4 \u5907\u4efd", url: "#4" },
+              {title: "5. \u751f\u4ea7\u65e5\u5fd7\u6e05\u7406\u7b56\u7565\u53c2\u8003", url: "#5" },
+              {title: "6. \u8fd0\u884c\u72b6\u6001\u68c0\u67e5&amp;\u9519\u8bef\u6392\u67e5", url: "#6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-link">
+        PlatONE编译和启动
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/" class="btn btn-xs btn-link">
+        环境配置
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="platone">PlatONE快速部署</h1>
+<h2 id="1-platone">1. PlatONE源码下载及编译</h2>
+<p>首先用户需要从github下载PlatONE源码并编译</p>
+<pre class="codehilite"><code class="language-shell"># 获取PlatONE源码
+git clone --recursive https://github.com/PlatONEnterprise/PlatONE-Go.git
+export WORKSPACE=${PWD}/PlatONE-Go/release/linux
+
+# 编译PlatONE
+cd PlatONE-Go; make all; cd ..</code></pre>
+
+<p>如果编译失败，请确保您正确安装了所需的环境，然后重新尝试.</p>
+<h2 id="2">2. 单机部署（适用于简单测试环境）</h2>
+<h3 id="21">2.1 快速部署（适用于简单测试环境）</h3>
+<p>本节将介绍如何快速启动一个节点或在同一台机器中启动四个节点。</p>
+<h4 id="211">2.1.1 开启单节点</h4>
+<p>快速启动单节点区块链:</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh one</code></pre>
+
+<h4 id="212">2.1.2 开启四节点</h4>
+<p>在一台机器上快速启动四节点区块链:</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh four</code></pre>
+
+<h3 id="22">2.2 快速演示</h3>
+<h4 id="221">2.2.1 启动单节点区块链</h4>
+<pre class="codehilite"><code class="language-shell"># 1. 生成描述区块链信息的genesis文件
+cd ${WORKSPACE}/scripts
+./platonectl.sh setupgen -n 0 --ip 127.0.0.1 --p2p_port 16791 --auto true  
+
+# 2. 初始化第一个节点(node 0)
+./platonectl.sh init -n 0 --ip 127.0.0.1 --rpc_port 6791 --p2p_port 16791 \
+--ws_port 26791 --auto "true"
+
+# 3. 开启节点 (node 0)
+./platonectl.sh start -n 0
+
+# 4. 部署系统合约
+./platonectl.sh deploysys -n 0  --auto "true"</code></pre>
+
+<h4 id="222">2.2.2 将其他节点添加到链中</h4>
+<pre class="codehilite"><code class="language-shell"># 1. 初始化node-1
+./platonectl.sh init -n 1 --ip 127.0.0.1 --rpc_port 6792 --p2p_port 16792 \
+--ws_port 26792 --auto "true"
+
+# 2. 启动node-1
+./platonectl.sh start -n 1
+
+# 3. 将节点添加到已存在的区块链中
+./platonectl.sh addnode -n 1 
+
+# 4. 将node-1更新为共识节点
+./platonectl.sh updatesys -n 1</code></pre>
+
+<h3 id="23">2.3 链部署详细</h3>
+<h4 id="231-genesisjson">2.3.1 创建genesis.json</h4>
+<p>当您启动区块链时，首先需要创建genesis.json文件。</p>
+<pre class="codehilite"><code>cd ${WORKSPACE}/scripts
+./platonectl.sh setupgen -n 0 --ip 127.0.0.1 --p2p_port 16791 --auto true  </code></pre>
+
+<ul>
+<li>auto=false: 将给出提示进行选择是否编译系统合约</li>
+</ul>
+<p>您也可以使用默认值。</p>
+<pre class="codehilite"><code>./platonectl.sh setupgen</code></pre>
+
+<h4 id="232">2.3.2 初始化节点</h4>
+<pre class="codehilite"><code>./platonectl.sh init -n 0 --ip 127.0.0.1 --rpc_port 6791 --p2p_port 16791 \
+--ws_port 26791 --auto "true"</code></pre>
+
+<p>您也可以使用默认值。</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh init</code></pre>
+
+<h4 id="233">2.3.3 启动节点</h4>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh start -n 0</code></pre>
+
+<p>在启动节点时, 也可以指定日志文件夹的路径, 日志文件分块的大小, 指定platone启动时额外的命令行参数等. (注意: 路径连接符'/' 需要进行转义, 参数option的值, 必须加上引号)</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh start -n 0 -d '.\/logs\/platone' -s 65535 -e '--verbosity 3 --debug'</code></pre>
+
+<p>日志文件夹中包含wasm执行的日志与platone运行的日志. 随时间推移, 日志文件会越积越多, 建议进行挂载, 或者进行定期删除等操作。</p>
+<h4 id="234">2.3.4 部署系统合约</h4>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh deploysys -n 0 --auto true</code></pre>
+
+<h4 id="235">2.3.5 添加节点</h4>
+<p>您可能希望向PlatONE网络添加一些节点，您必须首先初始化此新节点。</p>
+<ul>
+<li>初始化新节点(node 1):</li>
+</ul>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh init -n 1 --ip 127.0.0.1 --rpc_port 6792 --p2p_port 16792 \
+--ws_port 26792 --auto "true"</code></pre>
+
+<ul>
+<li>增加新节点:</li>
+</ul>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh addnode -n 1</code></pre>
+
+<ul>
+<li>您也可以添加远程节点:</li>
+</ul>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh addnode -n 10 --p2p_port 3333 --rpc_port 4444 --ip xxx.xxx.xxx.xxx --pubkey xxxxx</code></pre>
+
+<h4 id="236">2.3.6 更新节点</h4>
+<p>将节点更新为共识节点。</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh updatesys -n 1</code></pre>
+
+<p>您还可以更新节点状态：</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh updatesys -n 1 -c '{"status":3}'</code></pre>
+
+<h4 id="237">2.3.7 创建账户</h4>
+<p>为节点创建帐户:</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh createacc -n 1</code></pre>
+
+<h4 id="238">2.3.8 解锁帐户</h4>
+<p>解锁节点帐户。 在解锁节点帐户之前，请确保已启动节点。</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh unlock -n 1</code></pre>
+
+<h4 id="239-console">2.3.9 连接到console</h4>
+<p>您可以打开一个交互式JavaScript环境 :</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh console -n 0</code></pre>
+
+<h4 id="2310">2.3.10 获取所有节点</h4>
+<p>您可以从系统合约中获取所有节点</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh get</code></pre>
+
+<h4 id="2311">2.3.11 查看节点信息</h4>
+<p>以下命令可用于获取节点状态和信息:</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh status -n 0</code></pre>
+
+<p>console:</p>
+<pre class="codehilite"><code class="language-console">disable -&gt; node_id:  0
+          node info:
+                  node.address: f92f1c1469d1a8c38964c63d62d3167842ce70cd
+                  node.ip: 127.0.0.1
+                  node.rpc_port: 6791
+                  node.p2p_port: 16791
+                  node.ws_port: 26791
+                  node.pubkey: 9afcb45d2725059a5a6a7f379d6404b6c914b02dd3e7a33d29c87b3f28f8f63b78ffe2736a3cb52ae45bbf57471d438eac71ddcc0bdfbaa56d65e59d457159b2</code></pre>
+
+<h4 id="2312">2.3.12 停止和清除</h4>
+<p>您可以停止节点并清除节点数据：</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh stop -n 0
+./platonectl.sh clear -n 0</code></pre>
+
+<p>它还可以简化如下:(清除包括暂停功能）:</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh clear -n 0</code></pre>
+
+<h2 id="3">3. 多机部署（适用于生产环境/多机测试环境）</h2>
+<p>案例:  A, B, C, D四台主机 (部署前先删除原有的相关文件数据)</p>
+<ul>
+<li>A: 172.26.10.96</li>
+<li>B: 172.26.10.97</li>
+<li>C: 172.26.10.98</li>
+<li>D: 172.26.10.99</li>
+</ul>
+<h3 id="31">3.1 生产环境配置说明</h3>
+<ul>
+<li>在部署前，每个节点的机器需要做一次时间同步。</li>
+<li>日志等级：<code>-e</code> 指定了<strong>额外参数</strong>，默认<strong>额外参数</strong>是 <code>—debug</code>。在生产环境中可以通过 <code>-e " "</code> 覆盖日志等级， 即可开启<code>非debug</code>模式。同时<code>-e '--verbosity 2'</code>可以用来指定日志等级。</li>
+<li>日志位置：生产环境需要指定日志存放路径，参考<code>2.4节</code>中 <code>start</code>的参数<code>-d</code>指定日志存放位置</li>
+<li>日志分块：默认分块大小为64M。如需要指定 可参考<code>2.4节</code>中 <code>start</code>的参数<code>—logsize</code>指定分块大小。</li>
+<li>通过<code>—bootnodes</code>指定同步节点，推荐使用genesis.json中的observeNoes来连接，可在<code>-e " "</code>中指定（如下例子所示）。</li>
+</ul>
+<p>因此，在生产环境中：</p>
+<p><code>4.2</code>节中涉及到<code>start</code>启动步骤的操作步骤：</p>
+<p><code>./platonectl.sh start -n x</code></p>
+<p>需要替换成：</p>
+<p><code>./platonectl.sh start -n x -d "\/opt\/logs"  -e "--bootnodes enode://8ab91d36a58e03c7d5528ea9186474cf5bfbec46d24cd59cf5eef1b63b2f4120334ca2a6af9ae495fa1931cdfe684caa74c86ad77fcfa0f044f4da30f7a83a4e@127.0.0.1:16791"</code>（具体路径需要视生产的规划）</p>
+<h3 id="32">3.2 启动</h3>
+<p>A中:</p>
+<pre class="codehilite"><code class="language-bash">cd ${WORKSPACE}/scripts
+./platonectl.sh clear -a
+./platonectl.sh setupgen --ip 172.26.10.96 --auto true
+./platonectl.sh init -n 0 --ip 172.26.10.96 --auto true
+./platonectl.sh start -n 0
+./platonectl.sh deploysys --auto true
+./platonectl.sh init -n 1 --ip 172.26.10.97 --auto true
+./platonectl.sh init -n 2 --ip 172.26.10.98 --auto true
+./platonectl.sh init -n 3 --ip 172.26.10.99 --auto true
+for n in $(seq 3); do
+      ./platonectl.sh addnode -n ${n}
+done</code></pre>
+
+<p>此时所需要的多机数据文件准备齐全, 拷贝数据到其他三台主机</p>
+<pre class="codehilite"><code class="language-bash">scp -r ${WORKSPACE}/../linux user@172.26.10.97:~/
+scp -r ${WORKSPACE}/../linux user@172.26.10.98:~/
+scp -r ${WORKSPACE}/../linux user@172.26.10.99:~/</code></pre>
+
+<p>B中:</p>
+<pre class="codehilite"><code class="language-bash">cd ~/linux/scripts
+./platonectl.sh start -n 1</code></pre>
+
+<p>C中:</p>
+<pre class="codehilite"><code class="language-bash">cd ~/linux/scripts
+./platonectl.sh start -n 2</code></pre>
+
+<p>D中:</p>
+<pre class="codehilite"><code class="language-bash">cd ~/linux/scripts
+./platonectl.sh start -n 3</code></pre>
+
+<h3 id="33">3.3 更新节点为共识节点</h3>
+<p>A中:</p>
+<pre class="codehilite"><code class="language-bash">./platonectl.sh updatesys -n 1
+./platonectl.sh updatesys -n 2
+./platonectl.sh updatesys -n 3</code></pre>
+
+<h2 id="4">4 备份</h2>
+<p>该功能支持节点未启动，以及chaindb中数据损坏的场景下，通过线下传递区块数据的方式，将某节点落后的区块数据补齐</p>
+<h3 id="41-export">4.1. export</h3>
+<p>通过export功能，将某节点指定范围内的经过RLP编码后的区块数据导出到某个文件中</p>
+<pre class="codehilite"><code class="language-shell">./platone --datadir &lt;待导出节点的chaindata路径&gt; export &lt;输出文件名&gt; &lt;导出区块高度下界&gt; &lt;导出区块高度上界&gt;</code></pre>
+
+<h3 id="42-import">4.2. import</h3>
+<p>通过import功能，将7.1中导出的区块数据导入指定节点</p>
+<pre class="codehilite"><code class="language-shell">./platone --datadir &lt;待导入节点的chaindata路径&gt; import &lt;区块文件名&gt;</code></pre>
+
+<h2 id="5">5. 生产日志清理策略参考</h2>
+<p>我们模拟了正常交易压力下的日志量：单节点上，24小时产出约为300M大小的日志。</p>
+<ul>
+<li>
+<p>假设在500G数据盘的规划下，按照70%的阈值保留，去除链DB数据（建议保留至少100GB），那么可以保留约27个月的数据。</p>
+</li>
+<li>
+<p>但由于交易峰值出现的可能性，建议同时实施空间大小阈值的清理策略，即当日志总量达到500GB*70%-100GB =250GB 时，实施对最早的一个月数据的清理。</p>
+</li>
+</ul>
+<p><strong>总结：</strong></p>
+<p>时间维度和空间维度的日志清理策略同时实施。</p>
+<h2 id="6">6. 运行状态检查&amp;错误排查</h2>
+<p>在将链交付给业务前，我们可以从以下维度验证链的运行正确性，包括但不限于以下步骤：</p>
+<ol>
+<li>链运行状态检查：</li>
+</ol>
+<p>链运行日志，观察是否正常出块。（正常出块间隔在1～3秒之间）</p>
+<ol>
+<li>
+<p>系统合约部署情况检查：</p>
+</li>
+<li>
+<p>系统合约的部署日志在 wasm_log文件夹中，可以监控日志中是否出现了 error 关键词，排查合约是否正常部署。</p>
+</li>
+<li>
+<p>通过<code>./platonectl.sh get</code> 命令，确认所有节点已经被记录到了节点管理合约。</p>
+</li>
+<li>
+<p>监控链运行过程的<code>error</code>或者<code>warning</code>关键词。</p>
+</li>
+</ol>
+<p>（部分和节点瞬时联通性相关的，如节点互ping心跳包导致的报错信息可忽略。）</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-link">
+        PlatONE编译和启动
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/" class="btn btn-xs btn-link">
+        环境配置
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>RLP编码注意事项 - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "1. RLP\u7f16\u7801\u6ce8\u610f\u4e8b\u9879", url: "#_top", children: [
+              {title: "1.1. \u4e0d\u652f\u6301\u7684\u7c7b\u578b", url: "#11" },
+              {title: "1.2. \u81ea\u5b9a\u4e49\u7f16\u89e3\u7801\u65b9\u6cd5", url: "#12" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <div class="toc">
+<ul>
+<li><a href="#1-rlp">1. RLP编码注意事项</a><ul>
+<li><a href="#11">1.1. 不支持的类型</a></li>
+<li><a href="#12">1.2. 自定义编解码方法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="1-rlp">1. RLP编码注意事项</h1>
+<h2 id="11">1.1. 不支持的类型</h2>
+<ul>
+<li>非空的interface类型。例如：</li>
+</ul>
+<pre class="codehilite"><code class="language-bash">type Reader interface{
+  Read()
+}</code></pre>
+
+<ul>
+<li>
+<p>bool类型</p>
+</li>
+<li>
+<p>有符号整型</p>
+</li>
+<li>
+<p>浮点类型</p>
+</li>
+<li>
+<p>map</p>
+</li>
+<li>
+<p>channel</p>
+</li>
+<li>
+<p>函数</p>
+</li>
+</ul>
+<h2 id="12">1.2. 自定义编解码方法</h2>
+<ul>
+<li>可以通过自定义DecodeRLP，EncodeRLP两个方法来解决以下问题</li>
+<li>不可导出的字段不会编码。</li>
+<li>非空interface类型</li>
+<li>map类型</li>
+</ul>
+<p>示例代码如下所示：</p>
+<pre class="codehilite"><code class="language-go">type Proposal interface {
+    Number() *big.Int
+}
+
+type Preprepare struct {
+    View      *View
+
+    //Proposal是一个非空ingterface类型，如果需要编解码此字段，需要自定义下EncodeRLP，DecodeRLP方法
+    Proposal  Proposal
+
+    //小写字母开头，不可以导出，如果需要编解码此字段，需要自定义下EncodeRLP，DecodeRLP方法
+    lockRound *big.Int 
+  messages   map[common.Address]*message
+}
+
+func (b *Preprepare) EncodeRLP(w io.Writer) error {
+  //手动把哪些需要编码的对象一一填写进去，这样就可以把非导出字段进行编码，
+  //也可以很灵活的控制只对哪些字段进行编码
+    return rlp.Encode(w, []interface{}{b.View, b.Proposal, b.lockRound， b.Values(})
+}
+
+func (b *Preprepare) DecodeRLP(s *rlp.Stream) error {
+  //注意字段的顺序必要和EncodeRLP方法中的字段顺序一样
+    var preprepare struct {
+        View      *View
+        Proposal  *types.Block //必须定义为Proposal接口所指向的真正的类型
+        LockRound *big.Int
+    Messages []*message
+    }
+
+    if err := s.Decode(&amp;preprepare); err != nil {
+        return err
+    }
+    b.View, b.Proposal = preprepare.View, preprepare.Proposal
+
+  for _, val := range preprepare.Messages {
+        b.messages[val.Address] = val
+    }
+    return nil
+}
+
+func (b *Preprepare) Values() (result []*message) {
+    for _, v := range b.messages {
+        result = append(result, v)
+    }
+
+    return result
+}</code></pre>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

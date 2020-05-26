@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PlatONE Design - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "1. \u6982\u8ff0", url: "#_top", children: [
+          ]},
+          {title: "2. PanGu\u7b80\u4ecb", url: "#2-pangu", children: [
+              {title: "2.1. CBFT\u5171\u8bc6\u5f15\u64ce", url: "#21-cbft" },
+              {title: "2.2. Wasm\u5408\u7ea6\u5f15\u64ce", url: "#22-wasm" },
+          ]},
+          {title: "3. \u67b6\u6784\u56fe", url: "#3", children: [
+          ]},
+          {title: "4. \u5171\u8bc6\u7684\u4f18\u5316", url: "#4", children: [
+          ]},
+          {title: "5. \u7cfb\u7edf\u5408\u7ea6", url: "#5", children: [
+          ]},
+          {title: "6. \u6743\u9650\u7ba1\u7406", url: "#6", children: [
+              {title: "6.1. \u5e73\u53f0\u89d2\u8272\u6743\u9650", url: "#61" },
+              {title: "6.2. \u5408\u7ea6\u9632\u706b\u5899", url: "#62" },
+          ]},
+          {title: "7. \u5e73\u53f0\u89d2\u8272\u63a5\u53e3\u5c01\u88c5", url: "#7", children: [
+          ]},
+          {title: "8. \u6269\u5c55\u8c03\u7528\u63a5\u53e3\u5c01\u88c5", url: "#8", children: [
+          ]},
+          {title: "9. CNS\u670d\u52a1", url: "#9-cns", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <div class="toc">
+<ul>
+<li><a href="#1">1. 概述</a></li>
+<li><a href="#2-pangu">2. PanGu简介</a><ul>
+<li><a href="#21-cbft">2.1. CBFT共识引擎</a></li>
+<li><a href="#22-wasm">2.2. Wasm合约引擎</a></li>
+</ul>
+</li>
+<li><a href="#3">3. 架构图</a></li>
+<li><a href="#4">4. 共识的优化</a></li>
+<li><a href="#5">5. 系统合约</a></li>
+<li><a href="#6">6. 权限管理</a><ul>
+<li><a href="#61">6.1. 平台角色权限</a></li>
+<li><a href="#62">6.2. 合约防火墙</a></li>
+</ul>
+</li>
+<li><a href="#7">7. 平台角色接口封装</a></li>
+<li><a href="#8">8. 扩展调用接口封装</a></li>
+<li><a href="#9-cns">9. CNS服务</a></li>
+</ul>
+</div>
+<h2 id="1">1. 概述</h2>
+<p>PlatONE基于PanGu开发。</p>
+<p>PanGu是一个区块链开发框架，其可做为一个独立的系统运行起来。可以理解为PanGu为BCOS2.0提供了区块链的基础设施。</p>
+<h2 id="2-pangu">2. PanGu简介</h2>
+<p>PanGu实现了区块链系统若干必要组件。本文仅介绍其共识引擎和合约引擎。</p>
+<h3 id="21-cbft">2.1. CBFT共识引擎</h3>
+<p>Concurrent Byzantine Fault Tolerance（简称CBFT）, 并行拜占庭容错系统。在保证活性、安全性和高效性的前提下，提供了 (n-1)/3 的容错性。主要特点支持并行出块及共识，大大的提高了出块的速率，可更好的满足超高频交易量的需求。</p>
+<h3 id="22-wasm">2.2. Wasm合约引擎</h3>
+<p>WebAssembly（简称Wasm）是一种新的适合于编译到Web的，可移植的，大小和加载时间高效的格式。这是一个新的与平台无关的二进制代码格式。Wasm 可以由C++/Rust等高级语言编译而来。</p>
+<p>PanGu支持C++编写Wasm智能合约，并提供一个基础模板库，以降低开发门槛。</p>
+<h2 id="3">3. 架构图</h2>
+<p><img alt="cca61ea40997589546942034a32909ef" src="assets/cca61ea40997589546942034a32909ef.jpg" /></p>
+<p><img alt="51bff963014d5a68ee8df8d6e986a089" src="assets/51bff963014d5a68ee8df8d6e986a089.jpg" /></p>
+<h2 id="4">4. 共识的优化</h2>
+<ul>
+<li>时钟同步机制</li>
+</ul>
+<p>由于CBFT出块机制强依赖于系统时间戳，因此需要引入时钟同步机制。</p>
+<p>NTP服务由根节点来提供。</p>
+<p>时钟同步在每一轮共识完成后进行一次。</p>
+<ul>
+<li>重交易的处理</li>
+</ul>
+<p>重交易是指需要较长的时间去执行的交易。</p>
+<p>设置单笔交易允许的最大执行时间，当前出块节点在出块时，若某笔交易未在允许的时间内执行完成，则回滚区块状态为该笔交易执行前的状态，将该笔交易从交易队列中删除。</p>
+<p>被一个节点丢弃的重交易仍有机会在其他节点上被打包。</p>
+<ul>
+<li>Nonce机制改造</li>
+</ul>
+<p>为了使交易可以被丢弃，需要对Nonce机制进行改造。</p>
+<p>Nonce的生成规则修改为由交易发起方生成32字节的随机数。</p>
+<p>交易重放检测时以交易Hash为键值。</p>
+<ul>
+<li>潜在问题</li>
+</ul>
+<p>若NTP服务器受到攻击，共识机制是否因此瘫痪？</p>
+<p>是否引入去中心化的时钟同步？</p>
+<h2 id="5">5. 系统合约</h2>
+<ul>
+<li>
+<p>内置系统合约</p>
+</li>
+<li>
+<p>合约管理合约</p>
+<p>为其他合约提供注册登记服务，会登记合约的地址、名称、版本号、发行人等信息，为CNS服务提供信息。</p>
+</li>
+<li>
+<p>外置系统合约</p>
+</li>
+<li>
+<p>参数管理合约</p>
+<p>将一些可变的系统参数放置在参数管理合约中，以便在系统运行过程中可根据实际需要调整。</p>
+</li>
+<li>
+<p>平台用户申请合约</p>
+<p>管理所有的平台用户申请信息及审核信息，申请审核通过后，平台用户信息才会登记于平台用户管理合约。</p>
+</li>
+<li>
+<p>平台用户管理合约</p>
+<p>管理所有的平台用户信息，只有平台层用户才能被分配平台角色。</p>
+</li>
+<li>
+<p>平台角色申请合约</p>
+<p>管理所有的平台用户提交的角色申请，申请审核通过后，角色对应的用户信息才会登记于平台角色管理合约。</p>
+</li>
+<li>
+<p>节点申请合约</p>
+<p>管理所有的节点申请信息及审核信息，节点申请审核通过后，节点信息才会登记于节点管理合约。</p>
+</li>
+<li>
+<p>节点管理合约</p>
+<p>管理所有的节点信息，节点包括共识节点和非共识节点，节点信息包括节点公钥、证书、管理员、名称等等。</p>
+</li>
+</ul>
+<h2 id="6">6. 权限管理</h2>
+<h3 id="61">6.1. 平台角色权限</h3>
+<p>在平台层面上定义链创建者、链管理员、节点管理员、合约管理员、合约部署者等多种角色。</p>
+<ul>
+<li>
+<p>链创建者</p>
+<p>链创建者在链初始化时确定，调用初始化接口的账户用户即成为链创建者。链创建者不可被更改。</p>
+<p>链创建者权限如下：</p>
+<p>指定或取消链管理员；</p>
+<p>指定或取消节点管理员；</p>
+<p>指定或取消合约部署者；</p>
+<p>指定或取消合约管理员；</p>
+<p>新加节点；</p>
+<p>管理所有的节点；</p>
+<p>部署合约；</p>
+<p>为自己部署的合约设置防火墙；</p>
+<p>审核已部署的合约；</p>
+</li>
+<li>
+<p>链管理员</p>
+<p>链管理员由链创建者指定或取消，可以指定多个。</p>
+<p>链管理员权限如下：</p>
+<p>指定或取消节点管理员；</p>
+<p>指定或取消合约部署者；</p>
+<p>指定或取消合约管理员；</p>
+<p>新加节点；</p>
+<p>管理所有的节点；</p>
+<p>部署合约；</p>
+<p>为自己部署的合约设置防火墙；</p>
+<p>审核已部署的合约；</p>
+</li>
+<li>
+<p>节点管理员</p>
+<p>节点管理员由链创建者或链管理员指定或取消，可以指定多个。</p>
+<p>节点管理权限如下：</p>
+<p>新加节点；</p>
+<p>管理自己加的节点；</p>
+</li>
+<li>
+<p>合约管理员</p>
+<p>合约管理员由链创建者或链管理员指定或取消，可以指定多个。</p>
+<p>合约管理员权限如下：</p>
+<p>审核已部署的合约;</p>
+<p>指定或取消合约部署者；</p>
+</li>
+<li>
+<p>合约部署者</p>
+<p>合约部署者由链创建者或链管理员或合约管理员指定或取消，可以指定多个。如果链被设置为需要授权才能部署部署合约，拥有合约部署者角色的普通平台用户才可以部署合约。</p>
+</li>
+</ul>
+<h3 id="62">6.2. 合约防火墙</h3>
+<p>合约调用权限控制是指对发向合约的交易进行权限控制。为每个合约增加了一个属性，称为合约防火墙，合约防火墙的控制规则类似于Linux的iptables的进入规则。</p>
+<p>只有合约创建者才可以设置合约的防火墙规则，因此合约防火墙具有去中心化的属性。</p>
+<p>合约防火墙独立于合约的代码逻辑，合约代码只需要关注业务逻辑而不需要关注被调用的权限。Dapp开发者可根据自己的业务特征对自己的合约设置防火墙规则。</p>
+<h2 id="7">7. 平台角色接口封装</h2>
+<p>需要对系统合约在跨合约调用时频繁用到的平台角色接口进行封装。</p>
+<pre class="codehilite"><code class="language-c++">bool __sys_isChainOwer(Address);
+
+bool __sys_isChainAdmin(Address);
+
+bool __sys_isNodeAdmin(Address);
+
+bool __sys_isValidUser(Address);
+
+bool __sys_isContractAdmin(Address);
+
+bool __sys_isContractDeployer(Address);
+
+bool __sys_setChainAdmin(Address);
+
+bool __sys_setNodeAdmin(Address);
+
+bool __sys_setContractAdmin(Address);
+
+bool __sys_setContractDeployer(Address);</code></pre>
+
+<h2 id="8">8. 扩展调用接口封装</h2>
+<p>由底层向合约层提供的调用为扩展调用.</p>
+<p>底层使用一个虚拟合约地址0x00000000000000000000000000000000000000ec（简写为0xec），向合约提供调用服务。每一个扩展调用可看作是0xec合约的一个方法，底层通过拦截地址及方法的方式提供服务。</p>
+<p>针对每一个扩展调用，会在合约层封装一个接口。</p>
+<pre class="codehilite"><code class="language-C++">string __sys_PAIL_encrypt(const string&amp; _number, const string&amp; _pubkey);
+
+string __sys_PAIL_homAdd(string _cipher1, string _cipher2, string _pubkey);
+
+stirng __sys_PAIL_homSub(string _cipher1, string _cipher2, string _pubkey);
+
+bool __sys_NIZK_verifyProof(const string&amp; _pai,
+                            const string&amp; _fromBalCipher,
+                            const string&amp; _fromAmountCipher,
+                            const string&amp; _toAmountCipher,
+                            const string&amp; _fromPubkey,
+                            const string&amp; _toPubkey);</code></pre>
+
+<h2 id="9-cns">9. CNS服务</h2>
+<p>CNS全称为Contract Name Service，功能类似于DNS，使得账户用户在发送交易时可以直接指定合约的名称和版本号。当版本号缺省时使用最高版本。</p>
+<p>在交易发送接口中增加字段以区分交易类型，交易签名需要涵盖新增字段。</p>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

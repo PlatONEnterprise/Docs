@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>VRF - PlatONE</title>
+    <link href="../../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "VRF\u673a\u5236", url: "#_top", children: [
+              {title: "1. \u6982\u8ff0", url: "#1" },
+              {title: "2. \u5171\u8bc6\u548c VRF \u7b97\u6cd5\u4ea4\u4e92\u8bbe\u8ba1", url: "#2-vrf" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../../js/base.js"></script>
+      <script src="../../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-link">
+        智能合约概要
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../IBFT/Istanbul%E5%85%B1%E8%AF%86/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../IBFT/Istanbul%E5%85%B1%E8%AF%86/" class="btn btn-xs btn-link">
+        IBFT
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="vrf">VRF机制</h1>
+<h2 id="1">1. 概述</h2>
+<p>共识算法作为区块链的核心组件，面临着一个重要的权衡问题，即共识节点数量和共识性能之间的权衡。尽管共识节点数量越多，意味着更高的去中心化程度，但与此同时会导致共识的性能的降低。在 PlatONE 中，共识算法为 BFT 类共识，随着共识节点数量的增多，共识消息的数量也随之增多，导致区块链的 TPS 的降低。</p>
+<p>为了在共识节点数量和共识性能之间进行一个较好的折衷，PlatONE 中采用随机选取共识节点集合的机制，即通过从较多数量的候选共识节点中随机地选取一定数量的节点成为某一周期中具体参与共识的节点。如此便能在保证较好的去中心化的程度以及安全性的同时，又能够提供较好的共识性能。</p>
+<p>PlatONE 中随机选取共识节点的机制基于 VRF。VRF 即可验证随机函数（Verifiable Random Function） 。 VRF 这个概念最早由 Micali，Rabin 和 Vadhan 三个人所提出。它是一个伪随机函数，同时对其输出结果提供可公开验证的证明。 即给定一个输入值 <script type="math/tex">x</script>，拥有私钥 <script type="math/tex">sk</script> 的人可以计算一个函数值 <script type="math/tex">y=F_{sk}(x)</script> 以及证明 <script type="math/tex">\pi=P_{sk}(x)</script>。 利用证明 <script type="math/tex">\pi</script> 和公钥 <script type="math/tex">PK=g^{sk}</script>，每个人都可以验证 <script type="math/tex">y=F_{sk}(x)</script> 是否为用该算法计算出来的，并且不会泄露任何关于私钥 <script type="math/tex">sk</script> 的信息。 目前 VRF 的构造方案都是基于随机预示模型下的，主要有两大类：其中一类采用的是 RSA 来构造 VRF，即 RSA VRF。另一种使用的是椭圆曲线密码学来构造 VRF ，即 EC VRF。本文介绍的 VRF 方案中使用的是 EC VRF。</p>
+<h2 id="2-vrf">2. 共识和 VRF 算法交互设计</h2>
+<h3 id="21">2.1. 交互图</h3>
+<p><img alt="Interaction" src="../image/Interaction.png" /></p>
+<p>VRF 机制涉及的算法主要包括以下两个：</p>
+<ul>
+<li><strong>VRF</strong></li>
+</ul>
+<p>在出块节点打包完区块之后为该区块生成一个随机数和证明（proof），并且存储到区块中，当其它节点接收到该区块时对证明和随机数校验是否正确。</p>
+<ul>
+<li><strong>二项分布</strong></li>
+</ul>
+<p>在选举共识节点的时候通过使用二项分布来根据每个共识候选节点的权重计算出每个候选节点的概率，这样根据每个节点的概率去做选举，概率越高被选中的几率越高。为了增加选举的随机性，计算概率时选择使用 VRF 生成的随机数来进行。</p>
+<p>根据上图中的数字颜色可划分为两类交互流程来触发上述两种算法：</p>
+<p><strong>红色数字：</strong>属于出块节点触发，包括以下流程（图中数字表示）</p>
+<ul>
+<li><strong>2：</strong>由 Worker 完成出块之后，调用 VRF 生成证明和随机数并且存储到该区块中</li>
+<li><strong>4：</strong>由 Worker 执行完交易，调用 VrfPlugin。如果需要选举共识节点，则调用二项分布算法</li>
+</ul>
+<p><strong>蓝色数字：</strong>属于非出块节点触发（图中数字表示）</p>
+<ul>
+<li><strong>1：</strong>由共识节点在 consensus engine 接收到区块时，校验该区块的 VRF 输出值是否正确</li>
+<li><strong>3：</strong>由非共识节点同步区块后，校验该区块的 VRF 输出值是否正确</li>
+<li><strong>5：</strong>由非共识节点同步区块后，调用 VrfPlugin。如果需要选举共识节点，则调用二项分布算法</li>
+</ul>
+<h3 id="22">2.2. 类图</h3>
+<p><img alt="classes" src="../image/classes.png" /></p>
+<p>共识节点的选举是由 VRF 和二项分布结合来执行的。两个算法是相互独立地触发和执行的，只是二项分布的概率计算依赖于 VRF 产生的随机性，通过随机性可实现权重高低的概率性，具体说明如下：</p>
+<ul>
+<li>区块产生后，为区块生成 VRF 证明和随机数并且存储到区块中；随机数用作选举共识节点，证明用作证明该随机数是由该出块节点根据前一个区块的随机数产生的</li>
+<li>在选举共识节点的时候就需要使用前 N 个区块的随机数对应分配给 N 个节点来和当前区块的随机数进行异或运算，计算之后的值作为二项分布的输入值来计算概率</li>
+<li>每个节点被分配的随机数不同，所以计算后每个节点的二项分布的输入值也就不同，所获取的二项分布累积分布曲线上的点就不同，因此产生了概率性</li>
+</ul>
+<p><img alt="bd_process" src="../image/bd_process.png" /></p>
+<h3 id="23">2.3. 存储</h3>
+<p><strong>1. </strong><code>Header</code>中原有字段<code>Nonce</code>，该字段类型为<code>[]byte</code>，用作存储 VRF 的证明（证明字段详解见接口说明）</p>
+<p><strong>2.</strong> 由于选举共识节点需要往前 N 个（也就是候选者节点的个数）区块的随机数，所以这些随机数需要以合适方式进行存储以方便读取。</p>
+<p>由于 N 代表的是待选举的节点数量，是不定的数字，因此可以缓存前若干个预先确定数量的区块的随机数。该预先确定数量目前暂定为 100，且该数字可以在节点启动命令行中通过相应的 flag（暂定 --nonceCache） 进行按需设置。</p>
+<h3 id="24">2.4. 算法具体业务逻辑</h3>
+<h4 id="241-vrf">2.4.1. VRF 相关</h4>
+<ol>
+<li><strong>生成证明</strong>：由出块节点在<code>worker</code>的<code>commitNewWork</code>中执行交易前，调用<code>VRF</code>的<code>Prove</code>函数对该区块生成证明和随机数并存储到<code>Header</code>中的<code>Nonce</code>字段</li>
+<li><strong>共识节点接收区块</strong>：由共识节点在接收到提议区块后，调用<code>VRF</code>的<code>Verify</code>函数对该区块的证明校验是否正确</li>
+<li><strong>非共识节点同步区块</strong>：这里非共识节点包括本周期选举前的共识候选节点以及观察者节点。同步分为两部分，分别是<code>downloader</code>和<code>fetcher</code>模块，它们同步区块之后最终调用<code>blockChain</code>的<code>InsertChain</code>函数处理区块，在<code>InsertChain</code>函数中调用<code>VRF</code>的<code>Verify</code>函数对该区块的证明校验是否正确</li>
+</ol>
+<h4 id="242">2.4.2. 二项分布相关</h4>
+<ol>
+<li><strong>出块节点</strong>：在选举过程触发时，<code>worker</code>中执行完交易之后调用 VrfPlugin 的<code>Election</code>函数，该函数调用<code>binomial_distribution</code>选举共识节点</li>
+<li><strong>非出块节点</strong>：在选举过程触发时，<code>blockChain</code>中执行完交易之后调用 VrfPlugin 的<code>Election</code>函数，该函数调用<code>binomial_distribution</code>计算出共识节点。</li>
+<li><strong>选举触发条件</strong>：参数管理合约中，VRF 选举标志被触发时，通过 Config 模块的事件通知方式通知到 VRF 模块，从而触发 VRF 共识节点选举的过程。</li>
+</ol>
+<h4 id="243-binomial_distribution">2.4.3. binomial_distribution 选举流程</h4>
+<ol>
+<li>获取待选举的共识候选节点列表</li>
+<li>获取当前区块的随机数（从<code>Block</code>中调用<code>Nonce</code>函数返回证明，再调用<code>VRF</code>的<code>ProofToHash</code>函数返回随机数）</li>
+<li>根据缓存中保存的随机数获取前 N 个区块的随机数，若缓存的随机数个数不足 N 个，则从链上读取剩余的区块的随机数</li>
+<li>计算单个权重被选中的概率，p=(待选举列表总权重/待选举列表人数)*选举人数/待选举列表总权重</li>
+<li>每个共识候选节点调用<code>NewBinomialDistribution</code>函数，并将各自的n(权重)、和上一步得到的p(概率)，传入函数中实例化一个对象</li>
+<li>分配随机数给每个候选节点，并与当前区块的随机数做异或，得出的值再除以(2的256次方-1)得出0~1之间的概率值<code>targetP</code></li>
+<li>每个候选人调用<code>InverseCumulativeProbability</code>函数，并把上一步得到的概率值<code>targetP</code>作为参数传入到函数中，得出<code>targetP</code>所属的累积分布曲线上的<code>x</code>值</li>
+<li>最终根据每个验证人计算所得的 x 值进行倒序排序，取前面 V 个验证人作为下一周期的共识节点。其中 V 是共识节点的个数。V 的值从 config 模块获取，即每次 VRF 选举触发时，从参数管理合约中获取的，由 Config 模块以参数形式放在事件通知中传递过来。</li>
+</ol>
+<p><strong>下图为前N个区块的随机数异或规则：</strong>（N 的实例取值为 101）</p>
+<p><img alt="ramdom_xor" src="D:\文档\区块链技术\区块链项目\PlatONE\共识算法\VRF\设计\image\ramdom_xor.png" /></p>
+<p>按共识候选节点的排名（默认按照节点在数组中的顺序），依次将前 N=101 个区块的随机数分配给各个共识候选节点。例如：往前1个区块的随机数分配给最后一名候选节点，往前第2个块的随机数分配给倒数第二名候选节点，以此类推，并且每个候选节点还拥有当前区块的随机数。</p>
+<h3 id="25">2.5. 关于节点的类型</h3>
+<p>对应着 VRF 的设计，在节点管理合约中，节点类型会有如下几种：</p>
+<ul>
+<li><strong>观察者节点</strong></li>
+</ul>
+<p>不参与共识节点的选举，只同步区块</p>
+<ul>
+<li><strong>共识候选节点</strong></li>
+</ul>
+<p>参与共识节点的选举；如果没有在本共识周期中被选为共识节点，则同样进行区块同步</p>
+<ul>
+<li><strong>共识节点</strong></li>
+</ul>
+<p>在本共识周期内从候选节点被选举为共识节点，参与共识的运行。在下一共识周期中，所有类型为共识节点和共识候选节点的节点都将参与 VRF 共识节点的选举过程。也就是说，只有观察者节点类型的节点不参与共识节点的选举。</p>
+<h3 id="26">2.6. 关于节点的属性</h3>
+<p>节点的属性，除已有的之外，还包括：</p>
+<ul>
+<li>节点的权重（目前节点的权重默认相同）</li>
+</ul>
+<h3 id="27">2.7. 算法接口</h3>
+<hr />
+<h4 id="271-vrf_secp-256k1">2.7.1. vrf_secp  256k1</h4>
+<blockquote>
+<p>使用secp256k1曲线的vrf算法实现</p>
+</blockquote>
+<p>ECVRF_prove函数</p>
+<blockquote>
+<p>该函数用于根据输入数据来生成随机数和证明，随机数和证明是拼接在同一个byte数组里面的，前1~33位为随机数</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pk</td>
+<td>[]byte</td>
+<td>公钥</td>
+</tr>
+<tr>
+<td>sk</td>
+<td>[]byte</td>
+<td>私钥</td>
+</tr>
+<tr>
+<td>m</td>
+<td>[]byte</td>
+<td>原始数据</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pi</td>
+<td>[]byte</td>
+<td>随机数和证明</td>
+</tr>
+<tr>
+<td>err</td>
+<td>error</td>
+<td>失败错误</td>
+</tr>
+</tbody>
+</table>
+<p>ECVRF_verify函数</p>
+<blockquote>
+<p>该函数用于校验随机数和证明，是否属于该公钥生成、是否基于该原始数据生成</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pk</td>
+<td>[]byte</td>
+<td>公钥</td>
+</tr>
+<tr>
+<td>pi</td>
+<td>[]byte</td>
+<td>随机数和证明</td>
+</tr>
+<tr>
+<td>m</td>
+<td>[]byte</td>
+<td>原始数据</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>success</td>
+<td>bool</td>
+<td>是否正确</td>
+</tr>
+<tr>
+<td>err</td>
+<td>error</td>
+<td>失败错误</td>
+</tr>
+</tbody>
+</table>
+<p>ECVRF_proof2hash函数</p>
+<blockquote>
+<p>该函数用于从证明中解析出随机数</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pi</td>
+<td>[]byte</td>
+<td>随机数和证明</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>randomNumber</td>
+<td>[]byte</td>
+<td>从证明pi中解析出来的随机数</td>
+</tr>
+</tbody>
+</table>
+<h4 id="272-vrf">2.7.2. vrf</h4>
+<blockquote>
+<p>该类是对具体实现算法的封装，不暴露具体曲线，只对外提供通用的接口和参数，然后调用具体实现算法类，构造所需参数传递过去</p>
+</blockquote>
+<p>Prove函数</p>
+<blockquote>
+<p>生成证明和随机数</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>privateKey</td>
+<td>ecdsa.PrivateKey</td>
+<td>私钥</td>
+</tr>
+<tr>
+<td>data</td>
+<td>[]byte</td>
+<td>原始数据</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pi</td>
+<td>[]byte</td>
+<td>随机数和证明</td>
+</tr>
+<tr>
+<td>err</td>
+<td>error</td>
+<td>失败错误</td>
+</tr>
+</tbody>
+</table>
+<p>Verify函数</p>
+<blockquote>
+<p>校验证明和随机数是否正确</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>publicKey</td>
+<td>ecdsa.PublicKey</td>
+<td>公钥</td>
+</tr>
+<tr>
+<td>pi</td>
+<td>[]byte</td>
+<td>证明和随机数</td>
+</tr>
+<tr>
+<td>data</td>
+<td>[]byte</td>
+<td>原始数据</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>success</td>
+<td>bool</td>
+<td>是否正确</td>
+</tr>
+<tr>
+<td>err</td>
+<td>error</td>
+<td>失败错误</td>
+</tr>
+</tbody>
+</table>
+<p>ProofToHash函数</p>
+<blockquote>
+<p>通过证明解析出随机数</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pi</td>
+<td>[]byte</td>
+<td>证明和随机数</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>randomNumber</td>
+<td>[]byte</td>
+<td>从证明pi中解析出来的随机数</td>
+</tr>
+</tbody>
+</table>
+<h4 id="273-binomial_distribution">2.7.3. binomial_distribution</h4>
+<blockquote>
+<p>二项分布算法的实现</p>
+</blockquote>
+<p>NewBinomialDistribution函数</p>
+<blockquote>
+<p>实例化一个二项分布对象，用作计算概率曲线的，由两个参数来构成：次数和概率</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>n</td>
+<td>int</td>
+<td>权重值（伯努利实验的次数）</td>
+</tr>
+<tr>
+<td>p</td>
+<td>float64</td>
+<td>成功概率值（单次伯努利实验的概率）</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>binomialDistribution</td>
+<td>BinomialDistribution</td>
+<td>二项分布结构体</td>
+</tr>
+</tbody>
+</table>
+<p>CumulativeProbability函数</p>
+<blockquote>
+<p>累积分布函数，计算曲线上到某点（某次）为止的范围的概率值</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x</td>
+<td>int</td>
+<td>次数</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ret</td>
+<td>float64</td>
+<td>x点上的概率值</td>
+</tr>
+</tbody>
+</table>
+<p>InverseCumulativeProbability函数</p>
+<blockquote>
+<p>累积分布函数，通过概率值反向计算出概率所属的某点的值x</p>
+</blockquote>
+<p>入参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>p</td>
+<td>float64</td>
+<td>某点（某次）的概率值</td>
+</tr>
+</tbody>
+</table>
+<p>出参：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x</td>
+<td>int</td>
+<td>概率值对应的某点的x值</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-link">
+        智能合约概要
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../IBFT/Istanbul%E5%85%B1%E8%AF%86/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../IBFT/Istanbul%E5%85%B1%E8%AF%86/" class="btn btn-xs btn-link">
+        IBFT
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

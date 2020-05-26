@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>(参考)geth各命令行作用1.1 - PlatONE</title>
+    <link href="../../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "1. Geth\u547d\u4ee4\u884c\u7528\u6cd5", url: "#_top", children: [
+          ]},
+          {title: "2. \u547d\u4ee4", url: "#2", children: [
+          ]},
+          {title: "3. \u4ea4\u6613\u6c60\u9009\u9879", url: "#3", children: [
+          ]},
+          {title: "4. ethereum\u9009\u9879", url: "#4-ethereum", children: [
+          ]},
+          {title: "5. \u5f00\u53d1\u8005\u9009\u9879", url: "#5", children: [
+          ]},
+          {title: "6. \u6027\u80fd\u8c03\u4f18\u9009\u9879", url: "#6", children: [
+          ]},
+          {title: "7. \u8d26\u6237\u9009\u9879", url: "#7", children: [
+          ]},
+          {title: "8. \u7f51\u7edc\u9009\u9879", url: "#8", children: [
+          ]},
+          {title: "9. \u65f7\u5de5\u9009\u9879", url: "#9", children: [
+          ]},
+          {title: "10. GAS\u4ef7\u683c\u9009\u9879", url: "#10-gas", children: [
+          ]},
+          {title: "11. \u865a\u62df\u673a\u9009\u9879", url: "#11", children: [
+          ]},
+          {title: "12. \u65e5\u5fd7\u8c03\u8bd5\u9009\u9879", url: "#12", children: [
+          ]},
+          {title: "13. whisper\u5b9e\u9a8c\u9009\u9879", url: "#13-whisper", children: [
+          ]},
+          {title: "14. ethash\u9009\u9879", url: "#14-ethash", children: [
+          ]},
+          {title: "15. API\u548c\u63a7\u5236\u53f0\u9009\u9879", url: "#15-api", children: [
+          ]},
+          {title: "16. \u8865\u5145\u9009\u9879", url: "#16", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../../js/base.js"></script>
+      <script src="../../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <div class="toc">
+<ul>
+<li><a href="#1-geth">1. Geth命令行用法</a></li>
+<li><a href="#2">2. 命令</a></li>
+<li><a href="#3">3. 交易池选项</a></li>
+<li><a href="#4-ethereum">4. ethereum选项</a></li>
+<li><a href="#5">5. 开发者选项</a></li>
+<li><a href="#6">6. 性能调优选项</a></li>
+<li><a href="#7">7. 账户选项</a></li>
+<li><a href="#8">8. 网络选项</a></li>
+<li><a href="#9">9. 旷工选项</a></li>
+<li><a href="#10-gas">10. GAS价格选项</a></li>
+<li><a href="#11">11. 虚拟机选项</a></li>
+<li><a href="#12">12. 日志调试选项</a></li>
+<li><a href="#13-whisper">13. whisper实验选项</a></li>
+<li><a href="#14-ethash">14. ethash选项</a></li>
+<li><a href="#15-api">15. API和控制台选项</a></li>
+<li><a href="#16">16. 补充选项</a></li>
+</ul>
+</div>
+<h1 id="1-geth">1. Geth命令行用法</h1>
+<p>基于: go-ethereum@1.8-stable</p>
+<pre class="codehilite"><code class="language-console">geth [选项] 命令 [命令选项] [参数…]</code></pre>
+
+<h1 id="2">2. 命令</h1>
+<ol>
+<li>
+<p>account    管理账户</p>
+</li>
+<li>
+<p>list  显示账户</p>
+</li>
+<li>new 创建账户</li>
+<li>update 跟新账户</li>
+<li>import 导入账户</li>
+<li>
+<p>例子: geth account new</p>
+</li>
+<li>
+<p>attach    :  通过rpc/ipc 连接以太坊节点</p>
+</li>
+<li>
+<p>例子: geth attach http:127.0.0.1:9999</p>
+</li>
+<li>
+<p>bug      :  浏览器打开github用于提交bug issues</p>
+</li>
+<li>
+<p>例子: geth bug</p>
+</li>
+<li>
+<p>console    启动交互式JavaScript环境</p>
+</li>
+<li>
+<p>例子: geth console</p>
+</li>
+<li>
+<p>copydb     从文件夹chaindata创建本地链</p>
+</li>
+<li>
+<p>例子: geth --datadir ./peer2 copydb peer1/geth/chaindata/</p>
+</li>
+<li>
+<p>dump      指定hash 或者 区块高度 获取此时的 所有账户 和账户对应的字段信息</p>
+</li>
+<li>
+<p>例子: geth dump 0</p>
+</li>
+<li>
+<p><code>go
+      "f76f69cee4faa0a63b30ae1e7881f4f715657010": {
+                  "balance": "200000000000000000000",
+                  "nonce": 0,
+                  "root": "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+                  "codeHash": "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+                  "code": "",
+                  "storage": {}
+              },
+      ...</code></p>
+</li>
+<li>
+<p>dumpconfig 显示配置信息</p>
+</li>
+<li>
+<p>显示 eth, Eth.Ethash, Eth.TxPool, Eth.GPO, Shh, Node, Node.P2P, Node.HTTPTimeouts, Dashboard 等配置信息</p>
+</li>
+<li>
+<p>例子: geth dumpconfig</p>
+</li>
+<li>
+<p>export     导出区块链到文件</p>
+</li>
+<li>
+<p><filename> [<blockNumFirst> <blockNumLast>]</p>
+</li>
+<li>
+<p>例子: <code>geth --datadir ./peer1 export exportfile 0 100</code></p>
+</li>
+<li>
+<p>import     导入一个区块链文件</p>
+</li>
+<li>
+<p><filename> (<filename 2> ... <filename N>) </p>
+</li>
+<li>
+<p>例子: <code>geth --datadir ./peer2 import exportfile</code></p>
+</li>
+<li>
+<p>init       启动并初始化一个新的创世纪块</p>
+</li>
+<li>
+<p>指定创世区块文件来进行初始化创世区块</p>
+</li>
+<li>
+<p>例子: geth init genesis.json</p>
+</li>
+<li>
+<p>js         执行指定的JavaScript文件(多个)</p>
+<ol>
+<li><jsfile> [jsfile...]</li>
+<li>例子: geth js xx.js</li>
+</ol>
+</li>
+<li>
+<p>license    直接输入, 查看许可信息</p>
+<ol>
+<li>例子:  geth license</li>
+</ol>
+</li>
+<li>
+<p>makecache  生成ethash验证缓存(用于测试)</p>
+<ol>
+<li><blockNum> <outputDir></li>
+<li>例子: geth makecache 20 xxdir</li>
+</ol>
+</li>
+<li>
+<p>makedag    生成ethash 挖矿DAG(用于测试)</p>
+<ol>
+<li><blockNum> <outputDir></li>
+</ol>
+</li>
+<li>
+<p>monitor    监控和可视化节点指标</p>
+<ol>
+<li>需指定Available 的指标, 即可 可视化的监控</li>
+<li>例子:   ./geth monitor txpool/underpriced/Overall</li>
+</ol>
+</li>
+<li>
+<p>removedb   删除区块链和状态数据库</p>
+<ol>
+<li>例子: geth --datadir peer2/ removedb</li>
+</ol>
+</li>
+<li>
+<p>version    打印版本号</p>
+<ol>
+<li>例子: geth version</li>
+</ol>
+</li>
+<li>
+<p>wallet     管理钱包导入</p>
+<ol>
+<li>例子: geth wallet import /path/to/my/presale.wallet</li>
+</ol>
+</li>
+<li>
+<p>help,h     显示一个命令或帮助一个命令列表</p>
+</li>
+</ol>
+<h1 id="3">3. 交易池选项</h1>
+<ol>
+<li>--txpool.nolocals</li>
+<li>locals中的账户的交易, 会在验证交易时, 进行条件豁免,  比如 locals中的低价交易是不会被剔除的.   指定nolocals 则不会对本地交易特殊对待</li>
+<li><code>--txpool.locals</code> 逗号分隔指定账户,  将会被添加到txpool的locals字段中.  </li>
+<li>--txpool.journal</li>
+<li>本地  pending和queue中的交易记录在磁盘, 方便本地节点重启</li>
+<li>默认: "transactions.rlp"</li>
+<li>-- txpool.rejournal</li>
+<li>指定时间间隔, 重新生成交易日志.  </li>
+<li>最小为1秒, 如果短于1秒, 会被替换成1秒</li>
+<li>默认1hour</li>
+<li>--txpool.pricelimit</li>
+<li>加入交易池的最小的gas价格限制,  默认为1,  当设置小于1, 则会替换成1</li>
+<li>txpool对象的 gasPrice字段</li>
+<li>--txpool.pricebump</li>
+<li>每一个账号 都会被创建一个 txList,  根据交易的nonce 可以从txlist中取出对应的交易,   如果一个新的交易, 要替换老的交易 (他们的nonce 相同), 那么价格需上浮, 不然不会被加入到 txlist中,  此选项就是指定上浮百分比</li>
+<li>默认上浮10%</li>
+<li>--txpool.accountslots</li>
+<li>每个帐户保证<strong>可执行</strong>的最少交易槽数量  (默认: 16)</li>
+<li>设置小于1时,  替换成16</li>
+<li>会进行管理一下每个本地账户的 交易状态,  如果传入nil, 那么就会把 queue中的 拿过来</li>
+<li>在检查低nonce(太久的交易, 比现在的还低), 和 低余额超过gas的交易等等之后,  遍历pending进行均衡配额</li>
+<li>如果penging总数大于了全局的GlobalSlots的话, 那么就会检查 每一个账户的交易,  通过策略比对 账户的 accountslots, 减少单个账户交易, 从而减少GlobalSlots总交易数</li>
+<li>--txpool.globalslots</li>
+<li>所有帐户<strong>可执行</strong>的最大交易槽数量, 默认: 4096</li>
+<li>--txpool.accountqueue</li>
+<li>每个帐户允许的最多<strong>非可执行</strong>交易槽数量 (默认: 64)</li>
+<li>遍历每一个账户的时候, 会把账户对应的txList超过了 accountqueue 个数的交易, 进行删除掉  (根据nonce倒叙的) </li>
+<li>--txpool.globalqueue<ol>
+<li>所有帐户<strong>非可执行</strong>交易最大槽数量  (默认: 1024)</li>
+<li>如果queue中的账号的总非可执行的交易数 大于指定阈值, 那么  把不是本地发起交易的账号放入数组, (进行了排序,  然后 循环,  取出最后一个账号的交易, 进行从集合中删除它的所有交易, 然后 再取出倒数第二个账号, 进行删除所有交易, 直到 非可执行交易的总量在 阈值之内</li>
+</ol>
+</li>
+<li>--txpool.lifetime<ol>
+<li>非可执行交易最大入队时间(默认: 3小时)</li>
+<li>txpool的queue集合中, 如果一个非本地账户 存在的时间超过了 txpool.lifttime指定的时间, 那么将会删除此账户的全部交易 (每分钟检查一次)</li>
+</ol>
+</li>
+</ol>
+<h1 id="4-ethereum">4. ethereum选项</h1>
+<ol>
+<li>--config value          </li>
+<li>TOML 配置文件</li>
+<li>--datadir “xxx”        </li>
+<li>数据库和keystore密钥的数据目录</li>
+<li>--keystore              </li>
+<li>keystore存放目录(默认在datadir内)</li>
+<li>--nousb                 </li>
+<li>禁用监控和管理USB硬件钱包</li>
+<li>--networkid value       </li>
+<li>网络标识符(整型, 1=Frontier, 2=Morden (弃用), 3=Ropsten, 4=Rinkeby) (默认: 1)</li>
+<li>--testnet               </li>
+<li>Ropsten网络:预先配置的POW(proof-of-work)测试网络</li>
+<li>--rinkeby               </li>
+<li>Rinkeby网络: 预先配置的POA(proof-of-authority)测试网络</li>
+<li>--syncmode "fast"       </li>
+<li>同步模式 ("fast", "full", or "light")</li>
+<li>--ethstats value        </li>
+<li>统计上报ethstats service  URL (nodename:secret@host:port) </li>
+<li>--identity value        <ol>
+<li>自定义节点名</li>
+</ol>
+</li>
+<li>--lightserv value       <ol>
+<li>指定大于0, 则会增加les服务,  根据比例设置线程数</li>
+</ol>
+</li>
+<li>--lightpeers value      <ol>
+<li>最大的LES客户端的peers数量(默认值:100)</li>
+</ol>
+</li>
+<li>--lightkdf   <ol>
+<li>启动时, 会在 账号配置的时候, 降低加密使用的内存和cpu资源</li>
+</ol>
+</li>
+</ol>
+<h1 id="5">5. 开发者选项</h1>
+<ol>
+<li>
+<p>--dev               使用POA共识网络，</p>
+</li>
+<li>
+<p>默认预分配一个开发者账</p>
+</li>
+<li>
+<p>自动开启挖矿</p>
+</li>
+<li>
+<p>无法使用p2p网络</p>
+</li>
+<li>
+<p>--dev.period value  开发者模式下挖矿周期 (0 = 仅在交易时) (默认: 0)</p>
+</li>
+</ol>
+<h1 id="6">6. 性能调优选项</h1>
+<ol>
+<li>--trie-cache-gens   </li>
+<li>保持在内存中产生的trie node数量(默认:120)</li>
+<li>stateDB在 New和 reset的时候,  都会调用 OpenTrie,  此时会给 trie的cachelimit设置为指定的数量</li>
+<li>--cache</li>
+<li>设置可供使用的内存数, 默认是 1024M .  cache.database, cache.trie, cache.gc等内存 都是指定百分比, 从cache上面进行分配</li>
+</ol>
+<h1 id="7">7. 账户选项</h1>
+<ol>
+<li>--unlock </li>
+<li>需解锁账户以逗号分隔</li>
+<li>--password</li>
+<li>用于非交互式密码输入密码文件,   指定文件路径,  每一行作为 一个账号对应的密码</li>
+</ol>
+<h1 id="8">8. 网络选项</h1>
+<ol>
+<li>--bootnodes value    用于P2P发现引导的enode urls(逗号分隔)(对于light servers用v4+v5代替)</li>
+<li>当开启了节点发现,  满足 节点连接数为0, 20秒内没有连接过节点等条件时, 将会尝试连接bootnodes所指定的节点</li>
+<li>--bootnodesv4 , --bootnodesv5 设置后, 会覆盖掉 <code>--bootnodes</code>设置的内容</li>
+<li>--port value         p2p的监听端口(默认值:30303)</li>
+<li>--maxpeers value    p2p.server的 maxpeers 最大连接数 (如果设置为0，网络将被禁用)(默认值:25)</li>
+<li>节点建立连接时, 会判断此时是否超过了最大节点数,  如果是, 则不会再建立连接</li>
+<li>--maxpendpeers value    最大尝试连接的数量(如果设置为0，则将使用默认值)(默认值:0)</li>
+<li>被动接受 网络中最大的尝试连接数, 如果设置为0(默认值), 都将会在p2p.server的 listenLoop中, 被按照50来执行</li>
+<li>--nat value             NAT端口映射机制 (any|none|upnp|pmp|extip:<IP>) (默认: “any”)</li>
+<li>把内网的ip+端口, 映射为  路由器的IP+端口。</li>
+<li>默认值为any, 为同时使用 upnp和pmp</li>
+<li>--nodiscover            禁用节点发现机制(手动添加节点)</li>
+<li>关闭节点发现,  同步模式为light 则默认关闭.  同时p2p中不会尝试连接bootnodes中节点</li>
+<li>--v5disc           启动新的节点发现机制: topic-discovery协议</li>
+<li>当启动 <code>--v5disc</code>, 那么 会启动节点发现机制, <code>nodiscover</code>设置为true也不管用. </li>
+<li>--nodekey value    </li>
+<li>指定p2p节点私钥文件路径</li>
+<li>--nodekeyhex value     指定私钥十六进制字符串  进行启动<ol>
+<li>nodekey和nodekeyhex不能同时设置</li>
+</ol>
+</li>
+</ol>
+<h1 id="9">9. 旷工选项</h1>
+<ol>
+<li>--mine             启动挖矿 </li>
+<li>当设置启动 <code>--dev</code>时, 也会在节点启动时启动挖矿(如果, 此时同时指定了<code>--sync light</code>则会报错)</li>
+<li><code>--minerthreads</code>/<code>--miner.threads</code>:      挖矿使用的CPU线程数量,   默认为0</li>
+<li>如果设置为0, 则在启动挖矿时, 被当做-1来进行使用, 则会禁止本地挖矿</li>
+<li>--etherbase / <code>--miner.etherbas</code>       挖矿奖励地址(默认=第一个创建的帐户)(默认值:“0”) </li>
+<li>--targetgaslimit / <code>--miner.gastarge</code>  目标gas限制：设置最低gas限制(默认值:“8000000”)</li>
+<li>设置到 worker的 gasFloor字段,  </li>
+<li>会根据 gasFloor 和 gasCeil 来进行计算 下一个区块的区块头中的 gasLimit, 进行一个公式的调整</li>
+<li><code>--miner.gaslimit</code>  挖矿是, 区块的gas上限, 默认8000000</li>
+<li>设置到 worker的 gasCeil上</li>
+<li>--gasprice / <code>--miner.gasprice</code>        挖矿接受交易的最低gas价格 默认GWei</li>
+<li>设置在 eth的 gasPrice对象上, 在挖矿时, 会设置到txpool的gasprice, 也就是限制接收交易的gasprice</li>
+<li>--extradata / <code>--miner.extradat</code>        矿工设置的额外块数据 (不设置, 那么默认填客户端版本)</li>
+<li>长度不能超过32</li>
+<li>提交新区块时, 会填到 header的Extra字段中</li>
+<li><code>--miner.recommit</code> 新的挖掘循环的时间间隔 默认3秒</li>
+<li>如果设置小于一秒, 则会被当做一秒使用</li>
+<li>在newWorkLoop的时候, 会指定 一个 时间间隔传入 ,  会根据 默认的调整比例 进行调整</li>
+<li><code>--miner.noverify</code>  不对远程区块进行验证, ethash中, 不验证接收到的区块的工作量</li>
+</ol>
+<h1 id="10-gas">10. GAS价格选项</h1>
+<ol>
+<li>--gpoblocks value      用于检查gas价格的最近块的个数  (默认: 20)</li>
+<li>设置小于1, 将被当做1使用</li>
+<li>检查最近指定个数的区块的交易的gasprice</li>
+<li>--gpopercentile value  建议gas价参考最近交易的gas价的百分位数，(默认: 50)</li>
+<li>设置小于0 被当做0, 设置大于100 被当做100</li>
+<li>会把指定的最近的个数的区块 的所有交易的 gasPrice 进行排序之后,  然后以指定的百分比, 从集合中找出对应的 gasprice为建议的price</li>
+</ol>
+<h1 id="11">11. 虚拟机选项</h1>
+<ol>
+<li>
+<p>--vmdebug        记录VM和合约调试信息 bool</p>
+</li>
+<li>
+<p>也就是在opSha3的时候, 日志记录了对应的hash值</p>
+</li>
+</ol>
+<h1 id="12">12. 日志调试选项</h1>
+<ol>
+<li>--metrics            </li>
+<li>启用metrics收集和报告bool</li>
+<li>开启之后, 每3秒收集一次运行时进程的各项指标,  正在使用的内存之类的等等</li>
+<li>--fakepow            不真正的进行挖矿和验证区块</li>
+<li>--verbosity value    </li>
+<li>设置log等级</li>
+<li>0=crit, 1=error, 2=warn, 3=info, 4=debug, 5=detail (default: 3)</li>
+<li>--vmodule value      </li>
+<li>不同的模块中, 可以设置不同的日志等级.  (比如 eth/*=6,p2p=5)</li>
+<li>--backtrace value    </li>
+<li>指定文件和对应行号, 把这行的log的调用栈都打印出来 (比如 “block.go:271”)</li>
+<li>--debug       日志会带上此log执行所在的文件名和对应行号</li>
+<li>--pprof     会启用pprof HTTP的服务器, 可以看到程序 开启了多少个goroutine, 多少个线程等, 用于内存分析</li>
+<li>--pprofaddr value           pprof HTTP服务器监听接口(默认值:127.0.0.1)</li>
+<li>--pprofport value           pprof HTTP服务器监听端口(默认值:6060)</li>
+<li>--memprofilerate value      按指定频率进行内存分析    默认512 * 1024</li>
+<li>用于pprof,  按照指定的字节数 进行每次采样, 采样率越小, 数据越细致, 但进程运行越慢</li>
+<li>--blockprofilerate value    按指定频率打开block profiling    (默认值:0)<ol>
+<li>获取导致阻塞的 goroutine 堆栈,   指定的数值的意思是, 如指定为1,则每发生1个goroutine堵塞, 就会采样报告一次. 设置为0 , 则此采样操作取消</li>
+</ol>
+</li>
+<li>--cpuprofile          指定文件路径,写入cpu的报告分析, 显示每一个函数执行的时间</li>
+<li>--trace     将runtime中trace写入指定文件, 帮助追踪os线程如何调度goroutine ,  goroutine为什么堵塞等等问题</li>
+</ol>
+<h1 id="13-whisper">13. whisper实验选项</h1>
+<ol>
+<li>--shh                       </li>
+<li>启用Whisper 安全通信协议 </li>
+<li><code>--dev</code>情况下, 默认开启. </li>
+<li>只要设置了whisper相关的命令行参数, 都会自动开启 whisper</li>
+<li>--shh.maxmessagesize   可接受的最大的消息大小 (默认值: 1024*1024)</li>
+<li>设置和接收消息时, 会检查消息的大小, 超过阈值, 会显示错误</li>
+<li>--shh.pow value              </li>
+<li>可接受的最小的POW (默认值: 0.2)</li>
+<li>接收到的请求信息, 会比对 powtarget值, 在 指定值之上 才会被接收</li>
+<li>相当于计算pow的成本,  为了防止垃圾消息, 也是为了缓解网络压力  (pow值也 消息大小和TTL成正比)</li>
+<li>--shh.restrict-light  限制 2个轻客户端之间的连接 </li>
+<li>在握手中, 进行判断,  如果是轻节点 在 加上此参数设置后, 那么 节点间握手将不会被通过</li>
+</ol>
+<h1 id="14-ethash">14. ethash选项</h1>
+<ol>
+<li>--ethash.cachedir                        ethash验证缓存目录(默认 = datadir目录内)</li>
+<li>--ethash.cachesinmem value               在内存保存的最近的ethash缓存个数  (每个缓存16MB ) (默认: 2)</li>
+<li>--ethash.cachesondisk value              在磁盘保存的最近的ethash缓存个数 (每个缓存16MB) (默认: 3)</li>
+<li>--ethash.dagdir ""                       存ethash DAGs目录 (默认 = 用户hom目录)</li>
+<li>--ethash.dagsinmem value                 在内存保存的最近的ethash DAGs 个数 (每个1GB以上) (默认: 1)</li>
+<li>--ethash.dagsondisk value                在磁盘保存的最近的ethash DAGs 个数 (每个1GB以上) (默认: 2)</li>
+</ol>
+<h1 id="15-api">15. API和控制台选项</h1>
+<ol>
+<li>--rpc</li>
+<li>启用HTTP-RPC服务器</li>
+<li>--rpcaddr value</li>
+<li>HTTP-RPC服务器接口地址(默认值:“localhost”)</li>
+<li>--rpcport value</li>
+<li>HTTP-RPC服务器监听端口(默认值:8545)</li>
+<li>--rpcapi value</li>
+<li>基于HTTP-RPC接口提供的API</li>
+<li>--ws</li>
+<li>启用WS-RPC服务器</li>
+<li>--wsaddr value</li>
+<li>WS-RPC服务器监听接口地址(默认值:“localhost”)</li>
+<li>--wsport value </li>
+<li>WS-RPC服务器监听端口(默认值:8546)</li>
+<li>--wsapi  value</li>
+<li>基于WS-RPC的接口提供的API</li>
+<li>--wsorigins value</li>
+<li>websockets请求允许的源</li>
+<li>--ipcdisable<ol>
+<li>禁用IPC-RPC服务器</li>
+</ol>
+</li>
+<li>--ipcpath<ol>
+<li>包含在datadir里的IPC socket/pipe文件名(转义过的显式路径)</li>
+</ol>
+</li>
+<li>--rpccorsdomain value<ol>
+<li>允许跨域请求的域名列表(逗号分隔)(浏览器强制)</li>
+</ol>
+</li>
+<li>--jspath loadScript<ol>
+<li>JavaScript加载脚本的根路径(默认值:“.”)</li>
+</ol>
+</li>
+<li>--exec value <ol>
+<li>执行JavaScript语句(只能结合console/attach使用)</li>
+<li>例子:  geth --exec "eth.blockNumber" console 2&gt;/dev/null</li>
+</ol>
+</li>
+<li>--preload value<ol>
+<li>预加载到控制台的JavaScript文件列表(逗号分隔)</li>
+</ol>
+</li>
+</ol>
+<h1 id="16">16. 补充选项</h1>
+<ol>
+<li><code>--goerli</code></li>
+<li>预先配置的POA测试网络</li>
+<li><code>--override.constantinople</code> </li>
+<li>君士坦丁堡分岔设置</li>
+<li><code>--docroot</code> </li>
+<li>文档根目录, 默认home</li>
+<li><code>--gcmode</code>  区块链垃圾回收模式 ("full", "archive") 默认full</li>
+<li>链退出时, full 会将 最近区块账户状态写入磁盘, archive不会</li>
+<li>archive不会对trie进行修剪, 会实时同步tire到磁盘, full不会</li>
+<li><code>--whitelist</code> (<number>=<hash>) 使用逗号分隔</li>
+<li>发送GetBlockHeadersMsg消息请求白名单中对应的区块头</li>
+<li>收到对应的区块后, 会 验证此区块hash是否跟白名单中hash 匹配得上</li>
+<li><code>--dashboard</code> </li>
+<li>启动dashboard, 收集以太坊节点数据，用于可视化分析</li>
+<li><code>--dashboard.addr</code>   </li>
+<li>dashboard监听的host  默认localhost</li>
+<li><code>--dashboard.host</code>    </li>
+<li>dashboard监听的port 默认8080</li>
+<li><code>--dashboard.refresh</code>    </li>
+<li>刷新间隔, 默认5s</li>
+<li><code>--vm.ewasm</code> 外部的ewasm配置<ol>
+<li>./geth --vm.ewasm="$HOME/testnet/libhera.so,metering=true,fallback=true" ...</li>
+</ol>
+</li>
+<li><code>--vm.evm</code>  外部evm配置</li>
+<li><code>import-preimages</code>  hash预镜像导出到RLP编码的流<ol>
+<li>geth --datadir ./data0 export-preimages exportPreImage</li>
+</ol>
+</li>
+<li><code>export-preimages</code>   从RLP编码的流导入hash预镜像<ol>
+<li>geth --datadir ./data1 import-preimages exportPreImage</li>
+</ol>
+</li>
+</ol>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

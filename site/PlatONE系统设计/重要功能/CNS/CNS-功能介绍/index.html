@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>CNS - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5408\u7ea6\u547d\u540d\u670d\u52a1CNS", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        权限模型
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/EVM%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/EVM%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="btn btn-xs btn-link">
+        EVM虚拟机
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cns">合约命名服务CNS</h1>
+<p>在目前主流的区块链中，用户是通过地址来访问智能合约的，比如以太坊。智能合约的地址是一段十六进制字符串，用户需要记住这段冗长的字符串才能访问链上的智能合约。当合约需要升级时，重新部署合约又会产生新的地址，所有依赖于该合约的模块都需要做相应更新。显然现有访问合约的方式对用户是不友好的，因此我们在PlatONE中实现了合约命名服务，用户可以通过合约名称及版本号来访问智能合约。</p>
+<p><img alt="" src="../CNS.png" /></p>
+<p>合约命名服务英文全称为Contract Name Service，简称CNS。合约命名服务维护了名称、版本到合约地址的映射关系，提供了对系统中合约的管理功能，包括合约的注册和注销，合约注册信息和地址的查询等功能。</p>
+<p>PlatONE使用系统合约实现了合约命名服务，用户部署合约后可以将该合约注册到系统合约中，后续调用可以通过合约名称及版本进行调用，而无需使用合约地址。如果交易是根据合约名称、版本来调用合约，PlatONE底层自动在系统合约中查询名称版本对应的合约地址，然后调用该地址的合约。</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        权限模型
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/EVM%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/EVM%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="btn btn-xs btn-link">
+        EVM虚拟机
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

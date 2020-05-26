@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>ethkey - PlatONE</title>
+    <link href="../../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "ethkey \u64cd\u4f5c\u624b\u518c", url: "#_top", children: [
+              {title: "1. \u6982\u8ff0", url: "#1" },
+              {title: "2. \u521b\u5efa\u5bc6\u94a5\u5bf9 | ethkey genkeypair", url: "#2-ethkey-genkeypair" },
+              {title: "3. \u521b\u5efa\u5bc6\u94a5\u6587\u4ef6 \uff5c ethkey generate", url: "#3-ethkey-generate" },
+              {title: "4. \u67e5\u770b\u5bc6\u94a5\u6587\u4ef6\u4fe1\u606f \uff5c ethkey inspect", url: "#4-ethkey-inspect" },
+              {title: "5. \u7b7e\u540d\u6d88\u606f \uff5c ethkey signmessage", url: "#5-ethkey-signmessage" },
+              {title: "6. \u9a8c\u8bc1\u7b7e\u540d \uff5c ethkey verifymessage", url: "#6-ethkey-verifymessage" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../../js/base.js"></script>
+      <script src="../../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../../%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../../%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-link">
+        链管理操作指南
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../ctool/ctool%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../ctool/ctool%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-link">
+        ctool
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ethkey">ethkey 操作手册</h1>
+<h2 id="1">1. 概述</h2>
+<p>PlatONE与Ethereum一致都使用了基于secp256k1椭圆曲线的加解密、签名验签方案。</p>
+<ul>
+<li>私钥： 用户（或节点）自己保存，用于签名交易（或消息）</li>
+<li>公钥： 由私钥计算而来，公开出去作为身份验证</li>
+<li>地址： 对公钥取哈希后，取哈希值的后20个字节</li>
+<li>签名： 用户（或节点）使用自己的私钥，对交易（或消息）进行运算得到的固定长度的字节流</li>
+</ul>
+<p>PlatONE中用到公私钥的地方主要有以下两处：</p>
+<ul>
+<li>节点间消息通信，使用节点私钥为消息签名</li>
+<li>发送交易时，使用用户私钥为交易签名</li>
+</ul>
+<p>PlatONE提供了密钥工具ethkey，用于产生密钥对。</p>
+<p>该工具位于<code>~/PlatONE-Go/release/linux/bin</code>目录下。</p>
+<h2 id="2-ethkey-genkeypair">2. 创建密钥对 | ethkey genkeypair</h2>
+<pre class="codehilite"><code class="language-shell">./ethkey genkeypair
+
+Address   :  0xec5b67d6CC4b18cdEA2A7ddEBFe6E38305F38387
+PrivateKey:  3307251f43c4259a861a74eeed666595d961f03c0820f54252d7e711619c8593
+PublicKey :  a89421260aa2ec3eee9b148556850517b51b042272f5a536938a81acd9f152856dc200911f43f9a1d65567e31875d8de639a8b168c819ff0a3b5cb0a4d056e9f</code></pre>
+
+<p>该命令会创建一组新的密钥对，其中私钥是用户自己保存的，地址及公钥可以公开。</p>
+<h2 id="3-ethkey-generate">3. 创建密钥文件 ｜ ethkey generate</h2>
+<pre class="codehilite"><code class="language-shell">./ethkey generate
+
+Passphrase:
+Repeat passphrase:
+Address: 0x8B5d3Af7bF4d309D4C83Ed30936f78FBB1AcAA18</code></pre>
+
+<p>该命令用于根据输入的密码创建密钥文件（keyfile.json），密钥文件可以用来签名消息。</p>
+<p>keyfile.json文件的内容如下所示：</p>
+<pre class="codehilite"><code class="language-shell">{
+    "address":"8b5d3af7bf4d309d4c83ed30936f78fbb1acaa18",
+    "crypto":{
+        "cipher":"aes-128-ctr","ciphertext":"39e7bb77b7a6fc06ecbb884eecdd0f1fdcf48bd9ecd11aa5a904816bb1922160",
+        "cipherparams":{"iv":"4215fdb9202669687cfdb06806aabfe2"},
+        "kdf":"scrypt",
+        "kdfparams":{
+            "dklen":32,
+            "n":262144,
+            "p":1,
+            "r":8,
+            "salt":"a9490c104f46548d3a180ab339ad673c7eacb5092d446aba24621a7c25765852"
+        },
+        "mac":"487b560d5cabc067a8becfcf0a8279a9b3b293dbaf74989040011e7c40b30b92"
+    },
+    "id":"56ccd2ab-1a98-49c8-8173-6a805ac96948",
+    "version":3
+}</code></pre>
+
+<h2 id="4-ethkey-inspect">4. 查看密钥文件信息 ｜ ethkey inspect</h2>
+<pre class="codehilite"><code class="language-shell">Usgae:
+    ethkey inspect &lt;keyfile&gt;
+e.g:
+./ethkey inspect keyfile.json  --private
+
+Result:
+Passphrase:
+Address:        0x8B5d3Af7bF4d309D4C83Ed30936f78FBB1AcAA18
+Public key:     04f7acbc87ddf0da6edbd3ac86f81ebac69992cd4b40897855322c5c4ed029cacd5e1b9ef5b78d66576de68041689702fe5a893cae5f46def58e25738efa2ff801
+Private key:    e01cbcdbf2bea366eac27ec1214cd84fe718a77bee15a30102ef88f297b15cff</code></pre>
+
+<h2 id="5-ethkey-signmessage">5. 签名消息 ｜ ethkey signmessage</h2>
+<pre class="codehilite"><code class="language-shell">Usage:
+    ethkey signmessage &lt;keyfile&gt; &lt;message/file&gt;
+e.g:
+./ethkey signmessage keyfile.json message
+
+Result:
+Passphrase:
+Signature: cf394180f0ae2e507470e904eeba1cbcc8882c2b73ea9e712fcd897a5d195d292df076171dfb03e1913226de5060e5e7548ecc3091157f8d5b8b62def6c6d9d600</code></pre>
+
+<h2 id="6-ethkey-verifymessage">6. 验证签名 ｜ ethkey verifymessage</h2>
+<pre class="codehilite"><code class="language-shell">Usge:
+    ethkey verifymessage &lt;address&gt; &lt;signature&gt; &lt;message/file&gt;
+
+e.g:
+./ethkey verifymessage \
+ 0x8B5d3Af7bF4d309D4C83Ed30936f78FBB1AcAA18 \
+ cf394180f0ae2e507470e904eeba1cbcc8882c2b73ea9e712fcd897a5d195d292df076171dfb03e1913226de5060e5e7548ecc3091157f8d5b8b62def6c6d9d600 \
+ message
+
+Result:
+Signature verification successful!
+Recovered public key: 04f7acbc87ddf0da6edbd3ac86f81ebac69992cd4b40897855322c5c4ed029cacd5e1b9ef5b78d66576de68041689702fe5a893cae5f46def58e25738efa2ff801
+Recovered address: 0x8B5d3Af7bF4d309D4C83Ed30936f78FBB1AcAA18</code></pre>
+
+<p>注：上述命令的地址和签名需要改成你自己的对应的地址和签名，message内容可以改成你需要签名打内容，但是需要保持第五解和第六节打message内容一致。</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../../%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../../%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-link">
+        链管理操作指南
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../ctool/ctool%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../ctool/ctool%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-link">
+        ctool
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

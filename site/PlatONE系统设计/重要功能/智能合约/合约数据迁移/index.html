@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>合约数据迁移 - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5408\u7ea6\u6570\u636e\u8fc1\u79fb", url: "#_top", children: [
+              {title: "\u793a\u4f8b", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%87%AA%E5%AE%9A%E4%B9%89Gas%E6%89%A3%E8%B4%B9%E5%8A%9F%E8%83%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%87%AA%E5%AE%9A%E4%B9%89Gas%E6%89%A3%E8%B4%B9%E5%8A%9F%E8%83%BD/" class="btn btn-xs btn-link">
+        自定义Gas扣费功能
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-link">
+        智能合约概要
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="_1">合约数据迁移</h1>
+<p>在数据合约升级的场景，某些情况需要处理历史数据在新旧合约之间的迁移。</p>
+<p>PlatONE支持新旧合约之间的数据迁移，以保证合约升级时原有业务数据不丢失。</p>
+<p><img alt="" src="../migrate.png" /></p>
+<pre class="codehilite"><code>$ctool migInvoke --addr ${destination_contract_addr} --func 'migrateFrom' --param ${source_contract_addr}  --config ${ctool.json}</code></pre>
+
+<p>参数说明：</p>
+<p><code>${destination_contract_addr}</code> 为要迁入合约的地址</p>
+<p><code>${source_contract_addr}</code> 为要迁移的数据源合约</p>
+<h2 id="_2">示例</h2>
+<p>我们以迁移一个带数据的CNS合约为例，来描述操作过程：</p>
+<ol>
+<li>部署CNS合约 A：</li>
+</ol>
+<pre class="codehilite"><code>$ctool deploy --code ../conf/contracts/cnsManager.wasm --abi ../conf/contracts/cnsManager.cpp.abi.json --config ../conf/ctool.json</code></pre>
+
+<ol>
+<li>部署<code>userRegister</code>合约，用以在CNS合约 A中写入数据。（在用户场景中，这个步骤可选，只要保证待迁移的合约存在数据即可）</li>
+</ol>
+<pre class="codehilite"><code>$ctool deploy --code ../conf/contracts/userRegister.wasm --abi ../conf/contracts/userRegister.cpp.abi.json --config ../conf/ctool.json</code></pre>
+
+<ol>
+<li>部署CNS合约 B：</li>
+</ol>
+<pre class="codehilite"><code>$ctool deploy --code ../conf/contracts/cnsManager.wasm --abi ../conf/contracts/cnsManager.cpp.abi.json --config ../conf/ctool.json</code></pre>
+
+<ol>
+<li>执行迁移（拷贝，对原合约数据无影响）：</li>
+</ol>
+<pre class="codehilite"><code>$ctool migInvoke --addr 0x30c9f12cae592610df1a387cfec39db0e64989e4 --func 'migrateFrom("0xe1dcc86f53fcbad47e25e391111b03afc14f1db3")' -config ../conf/ctool.json</code></pre>
+
+<ol>
+<li>查看CNS合约 B上的数据，确认数据已得到迁移：</li>
+</ol>
+<pre class="codehilite"><code>$ctool invoke --addr 0x30c9f12cae592610df1a387cfec39db0e64989e4 --abi ../conf/contracts/cnsManager.cpp.abi.json --config ../conf/ctool.json --func getRegisteredContracts --param 0 --param 10</code></pre>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%87%AA%E5%AE%9A%E4%B9%89Gas%E6%89%A3%E8%B4%B9%E5%8A%9F%E8%83%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%87%AA%E5%AE%9A%E4%B9%89Gas%E6%89%A3%E8%B4%B9%E5%8A%9F%E8%83%BD/" class="btn btn-xs btn-link">
+        自定义Gas扣费功能
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E6%A6%82%E8%A6%81/" class="btn btn-xs btn-link">
+        智能合约概要
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

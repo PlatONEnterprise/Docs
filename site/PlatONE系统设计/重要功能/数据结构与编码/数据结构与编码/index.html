@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>数据结构与编码协议 - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6570\u636e\u7ed3\u6784\u4e0e\u7f16\u7801\u534f\u8bae", url: "#_top", children: [
+              {title: "\u7f16\u7801\u534f\u8bae", url: "#_2" },
+              {title: "\u4ea4\u6613\u7ed3\u6784", url: "#_3" },
+              {title: "\u4ea4\u6613\u56de\u6267", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="_1">数据结构与编码协议</h1>
+<div class="toc">
+<ul>
+<li><a href="#_1">数据结构与编码协议</a><ul>
+<li><a href="#_2">编码协议</a><ul>
+<li><a href="#rlp">RLP编码注意事项</a></li>
+</ul>
+</li>
+<li><a href="#_3">交易结构</a></li>
+<li><a href="#_4">交易回执</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="_2">编码协议</h2>
+<p>PlatONE同时支持Wasm虚拟机与EVM虚拟机，且允许Wasm合约与EVM合约之间的互调用。Wasm合约相关交易的data字段采用RLP编码，而evm合约相关交易的data字段则采用以太坊原生的编码方式。本节着重介绍RLP编码，以太坊的编码方式请详见<a href="https://solidity.readthedocs.io/en/latest/abi-spec.html?highlight=abi">Solidity官网</a></p>
+<h3 id="rlp">RLP编码注意事项</h3>
+<p><a href="../RLP%E7%BC%96%E7%A0%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">RLP编码注意事项</a></p>
+<h2 id="_3">交易结构</h2>
+<p>PlatONE的交易(Transaction)数据结构在原以太坊基础上添加了txType字段。</p>
+<table>
+<thead>
+<tr>
+<th align="left">name</th>
+<th align="left">type</th>
+<th align="left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">from</td>
+<td align="left">common.Address</td>
+<td align="left">交易发送方账户地址</td>
+</tr>
+<tr>
+<td align="left">to</td>
+<td align="left">*common.Address</td>
+<td align="left">交易接收方账户地址</td>
+</tr>
+<tr>
+<td align="left">gas</td>
+<td align="left">*hexutil.Uint64</td>
+<td align="left">单次交易允许的gas数量，用于限制合约的运行</td>
+</tr>
+<tr>
+<td align="left">gasPrice</td>
+<td align="left">*hexutil.Big</td>
+<td align="left">单位gas所需的价格数量</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">*hexutil.Big</td>
+<td align="left">(TODO)</td>
+</tr>
+<tr>
+<td align="left">nonce</td>
+<td align="left">*hexutil.Uint64</td>
+<td align="left">交易发送方产生的随机值，用于？？？</td>
+</tr>
+<tr>
+<td align="left">txType</td>
+<td align="left">uint64</td>
+<td align="left">交易类型，目前PlatONE有六种交易类型：防火墙(fwTxType),合约迁移(migTxType),合约名称调用(cnsTxType),合约部署(deploy),普通调用,转账(transfer)</td>
+</tr>
+<tr>
+<td align="left">data</td>
+<td align="left">*hexutil.Bytes</td>
+<td align="left">交易相关的数据，经过编码处理得到。部分交易类型会在data字段也附上txType</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">交易回执</h2>
+<p>PlatONE交易回执延用了以太坊的交易回执数据结构</p>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

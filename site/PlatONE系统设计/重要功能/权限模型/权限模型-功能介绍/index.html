@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>权限模型 - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PlatONE\u6743\u9650\u6a21\u578b", url: "#_top", children: [
+              {title: "1. \u89d2\u8272\u7ba1\u7406", url: "#1" },
+              {title: "2. \u8282\u70b9\u7ba1\u7406", url: "#2" },
+              {title: "3. \u5408\u7ea6\u9632\u706b\u5899", url: "#3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88/%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88/%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        密码学方案
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../CNS/CNS-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../CNS/CNS-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        CNS
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="platone">PlatONE权限模型</h1>
+<p>根据系统中的不同实体对象，PlatONE将权限管理进行了模块化的拆分。针对系统中用户账户、节点和智能合约这三类实体，分别设计了用户角色管理模块、节点管理模块和合约防火墙模块来进行权限的控制和管理。</p>
+<ul>
+<li>角色管理模块：用于管理用户在链上的权限</li>
+<li>节点管理模块：用于管理区块链网络中的节点</li>
+<li>合约防火墙模块：实现接口级别的合约访问权限</li>
+</ul>
+<h2 id="1">1. 角色管理</h2>
+<p>PlatONE中每种角色对应不同的权限等级，并通过系统合约对用户的角色进行管理，以控制用户的权限。</p>
+<p>新用户向系统合约提交注册信息，待链管理员审核通过后，便成为平台用户。用户可以通过用户地址或用户名称来查询或更新用户信息。与此同时，管理员可以禁用、激活以及删除用户。</p>
+<p>平台用户可以申请不同的角色，待链管理员审核通过后，被授予对应的角色，并拥有相应的权限。用户可以通过角色管理合约来查询角色，通过用户地址和用户名称两种查询条件查询用户角色信息，是否有某个角色，系统中某个角色的地址。</p>
+<p>PlatONE中的权限都是对系统中的用户分配的，用户的角色即表示用户的权限，目前用户可以分配如下角色（权限）。</p>
+<p><img alt="1" src="../permission_roles.png" /></p>
+<p>每个角色的权限范围如下表所示</p>
+<p><img alt="1" src="../permission_table.png" /></p>
+<h2 id="2">2. 节点管理</h2>
+<p>为了保证区块链的安全性，PlatONE通过节点管理合约对节点进行管理，包括节点是否能够接入网络，节点是否能够参与共识以及节点信息的维护等功能。根据之前用户角色的设定，只有chainCreator、chainAdmin和nodeAdmin这三类用户才可以设置系统合约中的节点数据，当需要添加节点、更新节点状态、删除节点时都需要这三类账户来调用节点管理合约。需要注意的是nodeAdmin仅可以管理自己加入的节点，chainCreator和chainAdmin可以管理所有节点。</p>
+<h3 id="21">2.1 节点类型</h3>
+<h4 id="_1">观察者节点</h4>
+<p>观察者节点负责同步区块但并不参与投票出块。 </p>
+<p>系统中，将会一直存在几个稳定的观察者节点。 用于其他节点连接，从而进行稳定的同步区块。 新节点启动时，使用bootnodes参数指定<strong>稳点的观察者节点</strong>进行连接，连接成功之后，则可正常同步区块。 稳定的观察者节点设置在genesis.json的suggestObserverNodes中，在链启动之后，需要将所设置的稳定的观察者节点添加到节点管理系统合约中。</p>
+<h4 id="_2">共识节点</h4>
+<p>共识节点参与投票出块，以及同步区块。</p>
+<p>在PlatONE刚启动之际，系统合约还并未部署，此时网络中的共识节点将会由genesis.json中validatorNodes中指定的第一个节点来承担。 由此节点进行共识出块。直到PlatONE部署完系统合约，并且成功的在节点管理合约中指定了新的共识节点之后，由合约中指定的多个共识节点进行相互投票和出块。</p>
+<h3 id="22">2.2 节点状态</h3>
+<p>节点状态可以使用节点管理系统合约的相应的API进行设置和更改。</p>
+<h4 id="_3">删除状态</h4>
+<p>删除状态下的节点无法连接其他节点，也无法被其他节点进行连接。 删除状态下的节点将会永久的停留在删除状态，不允许恢复。</p>
+<h4 id="_4">正常状态</h4>
+<p>正常状态下的节点，可以主动连接其他节点，也可以被其他正常状态下的节点进行连接。</p>
+<h3 id="23">2.3 节点启动</h3>
+<p>节点启动时，除了指定PlatONE常规参数外，还需要指定<code>--bootnodes</code>，bootnodes指定范围建议是稳定的观察者节点。 可以在genesis.json中suggestObserverNodes中查看到所有的稳定观察者节点。</p>
+<h3 id="24">2.4 节点连接</h3>
+<p>节点A启动后，会主动连接<code>--bootnodes</code>指定的节点B，而在节点B中，会检查节点A是否在存在于节点管理合约中，并且节点状态为正常状态。只有检查通过，此时节点B才会接受节点A的连接请求。 当节点成功连接之后，就可以进行同步区块等操作。</p>
+<h3 id="25">2.5 节点更新</h3>
+<p>节点管理合约提供相应的节点更新操作。可以按需更改合约中已添加的节点的状态，类型等节点信息。</p>
+<h2 id="3">3. 合约防火墙</h2>
+<p>合约防火墙主要实现了对防火墙白名单和黑名单的管理功能，使得合约的部署者可以设置合约的防火墙规则，以控制合约方法的调用权限，允许特定的用户调用合约的指定方法，在提高用户体验的同时又有效地提高了安全性能。</p>
+<p>PlatONE中合约的调用权限由合约防火墙控制，只有合约的创建者才可以设置该合约的防火墙。</p>
+<p>合约防火墙具备合约接口级别的访问控制，通过如下两个列表实现：
+    + ACCEPT: 可以访问相应接口的地址列表，相当于白名单
+    + REJECT: 拒绝访问相应接口的地址列表，相当于黑名单</p>
+<p><img alt="1" src="../contractFW.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88/%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88/%E5%AF%86%E7%A0%81%E5%AD%A6%E6%96%B9%E6%A1%88%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        密码学方案
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../CNS/CNS-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../CNS/CNS-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        CNS
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

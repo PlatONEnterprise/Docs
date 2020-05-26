@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>IBFT - PlatONE</title>
+    <link href="../../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "IBFT \u5171\u8bc6\u7b97\u6cd5", url: "#_top", children: [
+              {title: "1. \u6982\u8ff0", url: "#1" },
+              {title: "2. \u5171\u8bc6\u8282\u70b9\u9009\u53d6\u673a\u5236", url: "#2" },
+              {title: "3. \u5171\u8bc6\u6d41\u7a0b", url: "#3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../../js/base.js"></script>
+      <script src="../../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../VRF/PlatONE%20%E5%85%B1%E8%AF%86%E7%BB%93%E5%90%88%20VRF%20%E6%9C%BA%E5%88%B6/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../VRF/PlatONE%20%E5%85%B1%E8%AF%86%E7%BB%93%E5%90%88%20VRF%20%E6%9C%BA%E5%88%B6/" class="btn btn-xs btn-link">
+        VRF
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../../../%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../../../%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-link">
+        链管理操作指南
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ibft">IBFT 共识算法</h1>
+<h2 id="1">1. 概述</h2>
+<p>PlatONE 中的共识为高度优化的BFT类共识算法，其容错率为1/3，在保留即时确认（instant finality）的关键特性的同时,极大地提高了去中心化的程度。共识可以保证上链的区块是确定的，也就是说链不会出现分叉，同时每一个有效的区块都会插入到链上。</p>
+<p>PlatONE 的共识支持超过100个共识节点。相对于其他一些常见的BFT共识，PlatONE 的共识的性能有显著的提升。在10个共识节点的情况下，TPS 接近 1000。</p>
+<p>PlatONE 的共识运行的相关参数可以灵活地进行配置，并且 PlatONE 的共识中的共识节点集合可以灵活地进行更新。近期计划支持共识的插件化，以及共识的可审计性等。</p>
+<p>PlatONE 共识是在 round 上进行的。在特定的 round 上，通过预先设置的策略选取一个出块者节点。出块者节点的选取策略目前支持两种：round robin 和 sticky proposer。</p>
+<p>出块者节点提议区块后，各共识节点进行共识。共识分三阶段，其中后两个阶段为投票阶段，用以保证 Safety。PlatONE 共识使用 round change 机制结合锁定和解锁机制来保证共识的的 liveness 。通过优化解锁机制，解决了业界多个知名项目内存在的共识死锁问题。</p>
+<p>PlatONE 共识会为每一个链上的区块生成共识证明，也就是对于该区块的各共识节点的有效签名，因而区块可以进行自验证，同时也能支持轻节点。</p>
+<p>区块中如果不包含交易，则称为空区块。PlatONE 目前支持不出空区块，也就是上链的区块中都含有交易。不出空区块的机制可以有效地节省区块链占用的存储空间。</p>
+<p>以下具体介绍 PlatONE 中的共识算法。</p>
+<h2 id="2">2. 共识节点选取机制</h2>
+<ul>
+<li>节点的类型和状态</li>
+</ul>
+<p>节点分为共识节点（validator）和观察员节点两种类型。对于共识节点来说，存在两种状态：正常和隔离。只有处于正常状态的共识节点才可以参与共识和打包区块。</p>
+<ul>
+<li>共识节点的选取机制</li>
+</ul>
+<p>节点管理（NodeManager）系统合约设计用于存储和管理节点信息。可以通过节点申请（NodeRegister）系统合约申请注册共识节点，审核通过后，申请节点的类型会更新为共识节点，更新后的节点信息存储在节点管理合约中，并且可被查询。</p>
+<p>管理员可以根据需要更新共识节点的状态，来决定共识节点是否可以参加共识。</p>
+<ul>
+<li>共识节点集合的获取</li>
+</ul>
+<p>链上每次产生新区块后，节点管理合约中最新的节点信息都会被读取，并且最新的共识节点集合会被保存下来，并被共识引擎读取和使用。</p>
+<h2 id="3">3. 共识流程</h2>
+<h3 id="31">3.1. 正常流程</h3>
+<h4 id="311">3.1.1. 定义</h4>
+<p>以下是一些重要术语或概念的定义。</p>
+<ul>
+<li><code>+2/3</code> 表示"超过 2/3".</li>
+<li><code>NEW ROUND</code>:  新的round中会确定一个新的区块提议者（比如采用round robin算法），在新的round开始时，各共识节点等待接收<code>PRE-PREPARE</code>消息。</li>
+<li><code>PRE-PREPARED</code>:  validator节点接收到了<code>PRE-PREPARE</code> 消息，同时广播<code>PREPARE</code>消息之后进入这种状态。之后，validator节点等待并接收<code>+2/3</code>的<code>PREPARE</code> 或 <code>COMMIT</code> 消息。（注：有的validator节点因锁定在提议区块上，会在收到<code>PRE-PREPARE</code> 消息后直接广播<code>COMMIT</code> 消息。因此，这里validator节点等待并接收<code>PREPARE</code> 或 <code>COMMIT</code> 消息）</li>
+<li><code>PREPARED</code>: validator节点接收到了<code>+2/3</code>的<code>PREPARE</code>消息，同时广播<code>COMMIT</code>消息之后进入这种状态。之后，validator节点等待并接收<code>+2/3</code>的 <code>COMMIT</code> 消息。</li>
+<li><code>COMMITTED</code>:  validator节点接收到了<code>+2/3</code>的<code>COMMIT</code> 消息，进入到这种状态。此时，可以将提议的区块插入到区块链上了</li>
+<li><code>FINAL COMMITTED</code>:  新的区块成功上链后，validator节点进入到这种状态。此时，节点准备进入下一个round</li>
+<li><code>ROUND CHANGE</code>:  validator节点等待接收<code>+2/3</code>的、针对同一个提议round的<code>ROUND CHANGE</code>消息</li>
+</ul>
+<h4 id="312-proposer">3.1.2. 选取proposer的规则</h4>
+<ul>
+<li>
+<p>Round robin 算法（目前采用的）</p>
+</li>
+<li>
+<p>Sticky proposer</p>
+</li>
+</ul>
+<h4 id="313">3.1.3. 共识流程（三阶段协议）</h4>
+<p>共识流程由三个阶段组成：<code>PRE-PREPARE</code>, <code>PREPARE</code> 和<code>COMMIT</code>，也称为三阶段协议。</p>
+<ul>
+<li><code>PRE-PREPARE</code>阶段:  每次进入到一个新的round时，就会开始三阶段中的第一个阶段，即<code>PRE-PREPARE</code>阶段。在该阶段中，<strong>Proposer</strong>（区块提议者）节点生成一个提议区块，并广播给所有的validator节点。接着Proposer节点进入到PRE-PREPARED状态。其他validator 节点接收到有效的 <code>PRE-PREPARE</code> 消息后进入到<code>PRE-PREPARED</code> 状态。</li>
+<li><code>PREPARE</code>阶段: 在这一阶段，validator 节点广播<code>PREPARE</code>消息给其他validator 节点，并等待接收<code>+2/3</code> 的有效的 <code>PREPARE</code> 消息从而进入到<code>PREPARED</code>状态。</li>
+<li><code>COMMIT</code>阶段:  在这一阶段，validator 节点广播<code>COMMIT</code> 消息给其他validator 节点，并等待接收<code>+2/3</code> 的有效的 <code>COMMIT</code>  消息从而进入到 <code>COMMITTED</code> 状态。</li>
+</ul>
+<p>以上三阶段完成后，整个共识流程就成功完成了。</p>
+<h4 id="314">3.1.4. 状态迁移:</h4>
+<p>下图描述了PlatONE的共识流程的状态迁移过程。</p>
+<p><img alt="State transition diagram" src="../imgs/state_flow.jpg" /></p>
+<ul>
+<li><code>NEW ROUND</code> -> <code>PRE-PREPARED</code>: (对应于<code>2.1.3</code>节中的<code>PRE-PREPARE</code>阶段)<ul>
+<li><strong>Proposer</strong>从txpool中收集交易。</li>
+<li><strong>Proposer</strong>生成一个提议区块并广播给其他validator节点，接着就进入到<code>PRE-PREPARED</code> 状态。</li>
+<li>每一个<strong>validator</strong>节点接收到满足如下条件的<code>PRE-PREPARE</code> 消息后，进入到<code>PRE-PREPARED</code>状态：</li>
+<li>提议区块来自于有效的proposer节点。</li>
+<li>区块头有效</li>
+<li>提议区块的sequence（高度）和round和<strong>validator</strong>节点的当前状态一致。</li>
+<li><strong>Validator</strong>节点广播<code>PREPARE</code> 消息给其他validator节点。</li>
+</ul>
+</li>
+<li><code>PRE-PREPARED</code> -> <code>PREPARED</code>: (对应于<code>2.1.3</code>节中的<code>PREPARE</code>阶段)<ul>
+<li><strong>Validator</strong>接收到<code>+2/3</code> 的有效的 <code>PREPARE</code> 消息，从而进入到<code>PREPARED</code>状态。有效的消息需要满足如下条件：</li>
+<li>sequence 和 round 相一致</li>
+<li>区块哈希一致</li>
+<li>消息来自于已知的validator节点</li>
+<li><strong>Validator</strong> 节点在进入到<code>PREPARED</code>状态后，广播<code>COMMIT</code>消息。</li>
+</ul>
+</li>
+<li><code>PREPARED</code> -> <code>COMMITTED</code>: (对应于<code>2.1.3</code>节中的<code>COMMIT</code>阶段)<ul>
+<li><strong>Validator</strong>接收到<code>+2/3</code> 的有效的<code>COMMIT</code> 消息，从而进入到<code>COMMITTED</code> 状态。有效的消息需要满足如下条件：</li>
+<li>sequence 和 round 相一致</li>
+<li>区块哈希一致</li>
+<li>消息来自于已知的validator节点</li>
+</ul>
+</li>
+<li><code>COMMITTED</code> -> <code>FINAL COMMITTED</code>:<ul>
+<li><strong>Validator</strong>节点将<code>+2/3</code>的commitment签名（committed seal）添加到区块头的<code>extraData</code>字段中，并尝试将区块插入到区块链中。</li>
+<li>区块上链成功后，<strong>Validator</strong>节点进入到<code>FINAL COMMITTED</code> 状态。</li>
+</ul>
+</li>
+<li><code>FINAL COMMITTED</code> -> <code>NEW ROUND</code>:<ul>
+<li>各<strong>Validator</strong>节点选取出一个新的<strong>proposer</strong>节点，并启动一个新的round定时器。</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-round-change">3.2. Round change 机制</h3>
+<p>以下三种条件都会触发<code>ROUND CHANGE</code>:</p>
+<ul>
+<li>Round change定时器超时触发</li>
+<li>无效的<code>PREPREPARE</code>消息</li>
+<li>区块上链失败</li>
+</ul>
+<h4 id="321-round-change">3.2.1. round change 的流程</h4>
+<ul>
+<li>当一个validator节点检测到以上round change触发条件之一满足时，将会广播<code>ROUND CHANGE</code>消息，其中包含要变更到的目标round数值，同时等待接收来自其他validator节点的<code>ROUND CHANGE</code>消息。目标round的数值基于以下条件选取：</li>
+<li>如果validator节点已经从其他peer节点接收到了 <code>ROUND CHANGE</code> 消息，则从所有数量达到<code>F + 1</code> 的<code>ROUND CHANGE</code> 消息中包含的round数值中选取出最大的那个数值</li>
+<li>否则，将目标round的数值设置为：当前的round数值+1</li>
+<li>任何时候，如果一个validator节点接收到了<code>F + 1</code> 条含有相同的目标round数值的 <code>ROUND CHANGE</code> 消息，就会将该round数值和其自己的进行比较。如果接收到的数值更大，validator节点就再次广播<code>ROUND CHANGE</code> 消息，而消息中的round数值和接收到的相同。</li>
+<li>一旦validator节点接收到了<code>2F + 1</code> 条带有相同round数值的 <code>ROUND CHANGE</code> 消息，则结束round change循环，确定出新的<strong>proposer</strong>节点，之后进入到<code>NEW ROUND</code>状态。</li>
+<li>触发validator节点退出round change循环的另外一个条件是其通过p2p同步机制同步到验证后的区块。</li>
+</ul>
+<h3 id="33">3.3. 区块锁定机制</h3>
+<ul>
+<li>锁定区块的触发条件</li>
+</ul>
+<p>节点<code>锁定</code>在区块<code>B</code>、<code>round number</code> <code>R</code> 的含义是指，当前节点<strong>只能</strong>对区块<code>B</code>的信息投<code>commit</code>票 。当一个节点收到了<code>+2/3</code>个对区块<code>B</code>的<code>PREPARE</code>投票后，进入<code>PREPARED</code>状态。此时，节点被锁定，等待接收其他节点的<code>commit</code>投票信息，锁定的round即当前round；</p>
+<ul>
+<li>锁定区块的机制</li>
+</ul>
+<p>除了共识起始阶段，当收到更高区块的同步数据时，或当前高度成功产生区块并达成共识时，锁定被状态重置为非锁定状态，并开始新一轮对更高区块共识。如未能在锁定期间收到<code>+2/3</code>个指定round和区块的<code>commit</code>投票，则触发<code>ROUND CHANGE</code>。并且，在特定场景下，原有锁定解锁机制还会出现死锁的情况，我们在代码层面也优化了相关的解锁实现。具体可参考「2. 对Istanbul锁定解锁机制的优化」。</p>
+<h3 id="34-consensus-proof">3.4. Consensus proof 目前的存储机制</h3>
+<p>区块上链前，每个validator节点需要收集<code>2F + 1</code>个committed seal以构成一个consensus proof（共识证明）。一旦validator节点接收到足够的committed seal，就会将其存储于区块头的<code>extraData</code>字段中IstabulExtra结构中<code>CommittedSeal</code> 字段中，并重新计算<code>extraData</code>字段，然后将区块插入到区块链中。</p>
+<p>Committed seal计算过程如下：</p>
+<ul>
+<li>Committed seal的计算:</li>
+</ul>
+<p>每个validator节点使用其私钥对区块哈希级联上commit消息代码<code>COMMIT_MSG_CODE</code>的结果进行签名，得到签名即为Committed seal：</p>
+<ul>
+<li><code>Committed seal</code>: <code>SignECDSA(Keccak256(CONCAT(Hash, COMMIT_MSG_CODE)), PrivateKey)</code></li>
+<li><code>CONCAT(Hash, COMMIT_MSG_CODE)</code>: 将区块哈希和commit消息代码<code>COMMIT_MSG_CODE</code> 进行级联</li>
+<li>
+<p><code>PrivateKey</code>: 进行签名的validator节点的私钥</p>
+</li>
+<li>
+<p>上面提到的<code>extraData</code>是区块头的一个字段，其数据组成为：EXTRA_VANITY | ISTANBUL_EXTRA，其中|用以表示分隔EXTRA_VANITY和ISTANBUL_EXTRA的固定的索引（不是一个实际的分隔字符）。</p>
+</li>
+<li>
+<p>IstabulExtra结构的类型定义如下：</p>
+</li>
+</ul>
+<p><pre class="codehilite"><code class="language-go">  type IstanbulExtra struct {
+  Validators    []common.Address    //Validator addresses
+  Seal          []byte          //Proposer seal 65 bytes
+  CommittedSeal [][]byte            //Committed seal, 65 * len(Validators) bytes
+  }</code></pre>
+   其中，各字段的含义如下：
+   + Validators：参与共识的各validator节点的列表
+   + Seal：Proposer 节点对区块的签名，长度为65字节
+   + CommittedSeal：用于存储validator节点收集到的committed seal列表</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../VRF/PlatONE%20%E5%85%B1%E8%AF%86%E7%BB%93%E5%90%88%20VRF%20%E6%9C%BA%E5%88%B6/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../VRF/PlatONE%20%E5%85%B1%E8%AF%86%E7%BB%93%E5%90%88%20VRF%20%E6%9C%BA%E5%88%B6/" class="btn btn-xs btn-link">
+        VRF
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../../../%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../../../%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/%E9%93%BE%E7%AE%A1%E7%90%86/%E9%93%BE%E7%AE%A1%E7%90%86%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%971.0/" class="btn btn-xs btn-link">
+        链管理操作指南
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

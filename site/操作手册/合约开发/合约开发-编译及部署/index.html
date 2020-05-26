@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>编译及部署 - PlatONE</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "1. \u914d\u7f6eWasm\u5408\u7ea6\u5f00\u53d1\u73af\u5883", url: "#_top", children: [
+          ]},
+          {title: "2. \u6784\u5efa\u9879\u76ee\u53ca\u7f16\u8bd1\u5408\u7ea6", url: "#2", children: [
+              {title: "2.1. \u6784\u5efa\u9879\u76ee", url: "#21" },
+              {title: "2.2. \u7f16\u8bd1\u5408\u7ea6", url: "#22" },
+          ]},
+          {title: "3. \u90e8\u7f72\u53ca\u8c03\u7528\u5408\u7ea6", url: "#3", children: [
+              {title: "3.1. \u751f\u6210\u5408\u7ea6\u90e8\u7f72\u8d26\u6237", url: "#31" },
+              {title: "3.2. \u90e8\u7f72\u5408\u7ea6", url: "#32" },
+              {title: "3.3. \u8c03\u7528\u5408\u7ea6", url: "#33" },
+          ]},
+          {title: "4. \u901a\u8fc7console\u4e0e\u8282\u70b9\u4ea4\u4e92", url: "#4-console", children: [
+              {title: "4.1. \u8282\u70b9\u4ea4\u4e92", url: "#41" },
+              {title: "4.2. \u67e5\u8be2\u4ea4\u6613receipt", url: "#42-receipt" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cdt%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cdt%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="btn btn-xs btn-link">
+        cdt开发工具
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PlatONE%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/Installation/%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PlatONE%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/Installation/%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-link">
+        PlatONE编译和启动
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>该文档主要包括以下内容:
+  * Wasm合约开发环境配置教程;
+  * Wasm合约编译;
+  * Wasm合约部署及调用;</p>
+<p>方便用户对Wasm合约进行初步的了解，并快速掌握Wasm合约开发技巧.</p>
+<h2 id="1-wasm">1. 配置Wasm合约开发环境</h2>
+<p>获取最新稳定版的WASM合约发布包，并进行解压。</p>
+<pre class="codehilite"><code>wget https://github.com/PlatONEnterprise/PlatONE-Go/releases/download/v0.9.0/BCWasm_linux_release.v0.9.0.tar.gz
+
+# 进入BCWasm目录，然后定义路径：
+cd BCWasm
+export CONTRACTSSPACE=${PWD}</code></pre>
+
+<p>在<code>${CONTRACTSSPACE}</code>目录下包含了合约编译所需的材料，合约源码目录为<code>${CONTRACTSSPACE}/appContract</code></p>
+<p>获取PlatONE最新稳定版的发布包，并进行解压。进入解压获得的PlatONE_linux目录，然后定义路径：
+<pre class="codehilite"><code>wget https://github.com/PlatONEnterprise/PlatONE-Go/releases/download/v0.9.0/PlatONE_linux_v0.9.0.tar.gz
+
+tar -xzvf PlatONE_linux_v0.9.0.tar.gz
+
+cd PlatONE_linux
+export BIN_PATH=${PWD}/bin</code></pre></p>
+<p>⚠ 请确保 ${BIN_PATH}设置在当前的工作Shell，以让该环境变量生效。</p>
+<h2 id="2">2. 构建项目及编译合约</h2>
+<pre class="codehilite"><code>cd ${CONTRACTSSPACE}
+
+# 1. 构建用户合约
+./script/autoprojectForApp.sh  . my_contract
+
+# 2. 构建工程
+./script/autoprojectForApp.sh  .
+
+# 3. 编译合约
+cd build
+make my_contract</code></pre>
+
+<h3 id="21">2.1. 构建项目</h3>
+<p>第一步时，会在<code>${CONTRACTSSPACE}/appContract</code>下构建新的合约目录<code>my_contract</code>。</p>
+<p>第二步时，会在<code>${CONTRACTSSPACE}</code>下创建<code>build</code>，并编译合约。</p>
+<p>此时，<code>build</code>目录下的结构如下所示</p>
+<pre class="codehilite"><code>├── appContract
+│   ├── appDemo
+│   │   ├── appDemo.bc
+│   │   ├── appDemo.cpp.abi.json ## 合约的abi文件
+│   │   ├── appDemo.cpp.bc
+│   │   ├── appDemo.s
+│   │   ├── appDemo.wasm         ## 合约的wasm字节码
+│   │   ├── appDemo.wast
+│   │   ├── CMakeFiles
+│   │   ├── cmake_install.cmake
+│   │   └── Makefile
+│   ├── CMakeFiles
+│   ├── cmake_install.cmake
+│   ├── Makefile
+│   └── my_contract
+│       ├── CMakeFiles
+│       ├── cmake_install.cmake
+│       ├── Makefile
+│       ├── my_contract.cpp.abi.json ## 合约的abi文件
+│       ├── my_contract.bc
+│       ├── my_contract.cpp.bc
+│       ├── my_contract.s
+│       ├── my_contract.wasm
+│       └── my_contract.wast
+├── CMakeCache.txt
+├── CMakeFiles
+├── cmake_install.cmake
+└── Makefile</code></pre>
+
+<p>合约文件会通过脚本<code>autoprojectForApp.sh</code>默认生成如下的源码，可以在此基础上编写自己的合约。</p>
+<pre class="codehilite"><code class="language-cpp">//auto create contract
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;string&gt;
+#include &lt;bcwasm/bcwasm.hpp&gt;
+
+namespace demo {
+class my_contract : public bcwasm::Contract
+{
+    public:
+    my_contract(){}
+
+    /// 实现父类: bcwasm::Contract 的虚函数
+    /// 该函数在合约首次发布时执行，仅调用一次
+    void init() 
+    {
+        bcwasm::println("init success...");
+    }
+    /// 定义Event.
+    /// BCWASM_EVENT(eventName，arguments...)
+    BCWASM_EVENT(setName，const char *)
+
+    public:
+    void setName(const char *msg)
+    {
+        // 定义状态变量
+        bcwasm::setState("NAME_KEY"，std::string(msg));
+        // 日志输出
+        // 事件返回
+        BCWASM_EMIT_EVENT(setName，"std::string(msg)");
+    }
+    const char* getName() const 
+    {
+        std::string value;
+        bcwasm::getState("NAME_KEY"，value);
+        // 读取合约数据并返回
+        return value.c_str();
+    }
+};
+}
+// 此处定义的函数会生成ABI文件供外部调用
+BCWASM_ABI(demo::my_contract，setName)
+BCWASM_ABI(demo::my_contract，getName)</code></pre>
+
+<h3 id="22">2.2. 编译合约</h3>
+<p>进入<code>build</code>目录并编译该合约</p>
+<pre class="codehilite"><code>cd ${CONTRACTSSPACE}/build
+make my_contract</code></pre>
+
+<p>生成文件如下</p>
+<pre class="codehilite"><code>├build/ 
+├-appContact/
+│   └── my_contract
+│       ├── CMakeFiles
+│       ├── cmake_install.cmake
+│       ├── Makefile
+│       ├── my_contract.cpp.abi.json ## 合约的abi文件
+│       ├── my_contract.bc
+│       ├── my_contract.cpp.bc
+│       ├── my_contract.s
+│       ├── my_contract.wasm
+│       └── my_contract.wast</code></pre>
+
+<p>主要文件简介：</p>
+<ul>
+<li>.bc 连接标准库后的LLVM字节码文件，含所有依赖库；</li>
+<li>.json 合约对应的接口描述文件；</li>
+<li>.s 汇编文件；</li>
+<li>.wasm 合约编译后的二进制文件，字节码指令集；</li>
+<li>.wast 合约编译后的可被认为读懂的指令文件；</li>
+<li>.cpp.bc ；LLVM 字节码文件，仅包含合约代码本身的；</li>
+</ul>
+<p>其中，发布合约时需要用到的文件为my_contract.wast和my_contract.cpp.abi.json。</p>
+<h2 id="3">3. 部署及调用合约</h2>
+<h3 id="31">3.1. 生成合约部署账户</h3>
+<pre class="codehilite"><code>cd ${CONTRACTSSPACE}/build
+../script/create_accout.sh --ip 127.0.0.1 --rpc_port 6791</code></pre>
+
+<p>该命令会创建一个新的账户，创建时需要输入一个账户密码，方便后续解锁。</p>
+<p>除了新生成一个账户，该命令还会在当前目录创建一个<code>config.json</code>文件，该文件在调用合约时会用到。该文件记录节点的ip端口以及发送交易的账号。</p>
+<p>运行结果如下：</p>
+<pre class="codehilite"><code>nodeid: 127.0.0.1
+rpc_port: 6791
+
+###########################################
+####       Create an account           ####
+###########################################
+
+Input account passphrase.
+passphrase: your_phrase
+--output{"jsonrpc":"2.0"，"id":1，"result":"0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c"} --output
+New account: 0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c
+{"jsonrpc":"2.0"，"id":1，"result":true}
+127.0.0.1:6791
+
+ Create config.json for contract-deploy
+
+{
+  "url":"http://127.0.0.1:6791"，
+  "gas":"0x0"，
+  "gasPrice":"0x0"，
+  "from":"0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c"
+}</code></pre>
+
+<p>配置文件字段简述：</p>
+<ul>
+<li><code>url</code> PlatONE节点开放的JSON-RPC地址信息；</li>
+<li><code>from</code> 发布合约者的账户地址。</li>
+</ul>
+<p>长时间没用使用账户发送过交易，或者节点重启后，账户会被锁定，不能发送交易。需要使用如下命令，重新为账户解锁。</p>
+<pre class="codehilite"><code>../script/unlock_account.sh \
+             --account 0x08e7988e60ab5aa49d1f7aa9435ac91b9fcf772c \
+            --phrase "your_phrase" \
+            --ip 127.0.0.1 \
+            --rpc_port 6791</code></pre>
+
+<h3 id="32">3.2. 部署合约</h3>
+<pre class="codehilite"><code>cd ${CONTRACTSSPACE}/build
+
+# ctool是用来部署合约及发送交易的工具。
+cp  ${BIN_PATH}/ctool  .
+
+# 部署合约
+./ctool deploy --abi appContract/my_contract/my_contract.cpp.abi.json --code appContract/my_contract/my_contract.wasm --config ./config.json</code></pre>
+
+<p>结果:</p>
+<pre class="codehilite"><code>trasaction hash: 0x2f3a868d8ceb60804a830e5fc35611e3ae22ccb6ef298830acd84aba41f6dd99
+contract address: 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206</code></pre>
+
+<p>ctool工具使用方式主要有以下两种：</p>
+<pre class="codehilite"><code class="language-shell"># 合约部署
+./ctool                                                     \
+    deploy                                                  \
+    --abi   contract.cpp.abi.json                           \
+    --code  contract.wasm                                   \
+    --config ./config.json
+
+# 合约调用
+./ctool                                                     \
+    invoke                                                  \
+    --abi   contract.cpp.abi.json                           \
+    --addr  "合约地址： 0x1234"                               \
+    --config ./config.json                                  \
+    --func  "方法名字"                                       \
+    --param  "第1个参数"                                     \
+    --param  "第2个参数"                                     </code></pre>
+
+<ul>
+<li>提示1： 如果命令行中未明确指明配置文件路径，则会在当前工作路径读取文件：config.json。</li>
+<li>提示2： 发布合约到PlatONE网络，需要连接到节点，并保证发布合约的账户已进行了解锁操作，且没有超时。执行git-bash.exe打开git-bash窗口。</li>
+<li>提示3： 如果命令不能执行，请确保脚本具有执行权限，可使用命令：chmod +x ctool 进行授权。</li>
+</ul>
+<h3 id="33">3.3. 调用合约</h3>
+<p>调用合约的<code>setName方法</code></p>
+<pre class="codehilite"><code>#地址需要改成上节生成的地址
+
+./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/my_contract/my_contract.cpp.abi.json   --config ./config.json  --func "setName" --param "wxbc"  
+
+ request json data：[{"from":"0x32ab0a20b589f40c7e3d6ee485a2404bb7269f87"，"to":"0x2ee8d0545ebd20f9a992ff54cb0f21a153539206"，"gas":"0x0"，"gasPrice":"0x0"，"value":""，"data":"0xdb8800000000000000028c696e766f6b654e6f746966798477786263"，"txType":2}] 
+ response json：{"jsonrpc":"2.0"，"id":1，"result":"0xeb3680c65b393952a07ec590cef7b19fc87877a9fbb70c8e16797a97ed4cfaeb"}</code></pre>
+
+<p>调用合约的<code>getName</code>方法：</p>
+<pre class="codehilite"><code>#地址需要改成上节生成的地址
+
+./ctool invoke --addr 0x2ee8d0545ebd20f9a992ff54cb0f21a153539206 --abi appContract/my_contract/my_contract.cpp.abi.json   --config ./config.json  --func getName
+
+request json data：[{"from":"0x32ab0a20b589f40c7e3d6ee485a2404bb7269f87"，"to":"0x2ee8d0545ebd20f9a992ff54cb0f21a153539206"，"gas":"0x0"，"gasPrice":"0x0"，"value":""，"data":"0xd1880000000000000002876765744e616d65"，"txType":2}，"latest"] 
+response json：{"jsonrpc":"2.0"，"id":1，"result":"0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047778626300000000000000000000000000000000000000000000000000000000"}
+
+result: wxbc</code></pre>
+
+<h2 id="4-console">4. 通过console与节点交互</h2>
+<h3 id="41">4.1. 节点交互</h3>
+<pre class="codehilite"><code>cd ${BIN_PATH}
+
+./platone attach http://127.0.0.1:6791
+
+Welcome to the PlatONE JavaScript console!
+
+instance: PlatONEnetwork/platone/v0.2.0-stable-1b13ff73/linux-amd64/go1.12.4
+coinbase: 0x938c231429f5ab34244618fe0dc7380e319b470e
+at block: 1557 (Tue，18 Jun 2019 16:29:12 CST)
+ datadir: /home/gexin/PlatONE-Workspace/chain/PlatONE_linux/data/node-1
+ modules: admin:1.0 eth:1.0 net:1.0 personal:1.0 rpc:1.0 web3:1.0
+
+&gt; </code></pre>
+
+<p>通过上面命令可以与节点交互，用于查询相关信息</p>
+<h3 id="42-receipt">4.2. 查询交易receipt</h3>
+<pre class="codehilite"><code>#交易哈希值改成上节生成的
+&gt; eth.getTransactionReceipt("0x2f3a868d8ceb60804a830e5fc35611e3ae22ccb6ef298830acd84aba41f6dd99")</code></pre>
+
+<p>结果如下：</p>
+<pre class="codehilite"><code class="language-js">{
+  blockHash: "0x3f1e326f4b122efb26e9da417daff97dbb403c714d3324e8020ddce04b88617a"，
+  blockNumber: 236，
+  contractAddress: "0x2ee8d0545ebd20f9a992ff54cb0f21a153539206"，
+  cumulativeGasUsed: 1996535，
+  from: "0x32ab0a20b589f40c7e3d6ee485a2404bb7269f87"，
+  gasUsed: 1996535，
+  logs: []，
+  logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"，
+  status: "0x1"，
+  to: null，
+  transactionHash: "0x2f3a868d8ceb60804a830e5fc35611e3ae22ccb6ef298830acd84aba41f6dd99"，
+  transactionIndex: 0
+}</code></pre>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cdt%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cdt%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="btn btn-xs btn-link">
+        cdt开发工具
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PlatONE%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/Installation/%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PlatONE%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/Installation/%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8/" class="btn btn-xs btn-link">
+        PlatONE编译和启动
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

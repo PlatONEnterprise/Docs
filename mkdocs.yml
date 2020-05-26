@@ -1,0 +1,60 @@
+site_name: PlatONE
+pages:
+- Home: index.md
+- 基本介绍: PlatONE系统设计/基本介绍/PlatONE基本介绍.md
+- 教程:
+    - '合约部署调用演示': '教程/合约部署调用演示.md'
+    - '权限管理教程': '教程/PlatONE权限管理教程.md'
+    - '隐私代币合约使用指南': '教程/隐私代币合约使用指南.md'
+- 操作手册:
+    - 'PlatONE安装部署': 
+        - 环境配置: '操作手册/PlatONE安装部署/安装指南.md'
+        - 操作手册/PlatONE安装部署/Installation/快速部署.md
+        - 操作手册/PlatONE安装部署/Installation/详细安装与启动.md
+    - 合约开发:
+        - '编译及部署': '操作手册/合约开发/合约开发-编译及部署.md'
+        - 'cdt开发工具': '操作手册/合约开发/合约开发-cdt开发工具.md'
+        - 'cpp合约开发': '操作手册/合约开发/合约开发-cpp合约开发.md'
+        - 'solidity合约开发': '操作手册/合约开发/合约开发-solidity开发.md'
+    - 链工具:
+        - 脚本platonectl.sh: 操作手册/链工具/脚本scripts/Platonectl.sh操作手册.md
+        - ctool: 操作手册/链工具/命令行cmd/ctool/ctool操作手册.md
+        - ethkey: 操作手册/链工具/命令行cmd/ethkey/ethkey操作手册 - 密钥生成与管理.md
+    - 链管理操作指南: 操作手册/链管理/链管理操作指南1.0.md
+- 系统设计:
+    - 共识算法:
+        - IBFT: PlatONE系统设计/重要功能/共识算法/IBFT/Istanbul共识.md
+        - VRF: PlatONE系统设计/重要功能/共识算法/VRF/PlatONE 共识结合 VRF 机制.md
+    - 智能合约:
+        - PlatONE系统设计/重要功能/智能合约/智能合约概要.md
+        - PlatONE系统设计/重要功能/智能合约/合约数据迁移.md
+        - PlatONE系统设计/重要功能/智能合约/自定义Gas扣费功能.md
+        - PlatONE系统设计/重要功能/智能合约/隐私密码货币.md
+        - 虚拟机:
+            - Wasm虚拟机: PlatONE系统设计/重要功能/智能合约/WASM虚拟机.md
+            - EVM虚拟机: PlatONE系统设计/重要功能/智能合约/EVM虚拟机.md
+    - CNS: PlatONE系统设计/重要功能/CNS/CNS-功能介绍.md
+    - 权限模型: PlatONE系统设计/重要功能/权限模型/权限模型-功能介绍.md
+    - 密码学方案: PlatONE系统设计/重要功能/密码学方案/密码学方案简要介绍.md
+- SDK: 
+    - SDK/SDK概述.md
+    - SDK指南:
+        - SDK/JAVA-SDK.md
+- 浏览器: 浏览器/区块链浏览器配置.md
+- JSON-RPC API: JSON-RPC_API/JSON-RPC_API.md
+- 应用案例: 主页面/应用案例集.md
+- 常见问题: 常见问题解答/常见问题解答.md
+
+theme: readthedocs
+
+# solve numbering equation display
+markdown_extensions:
+ # - pymdownx.arithmatex
+  - pymdownx.superfences
+  - mdx_math:
+      enable_dollar_delimiter: True
+  - codehilite
+
+extra_javascript:
+  - mathjax-config.js
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML

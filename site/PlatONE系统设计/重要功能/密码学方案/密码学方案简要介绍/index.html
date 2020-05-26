@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>密码学方案 - PlatONE</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u56fd\u5bc6sm2\u7b97\u6cd5", url: "#_top", children: [
+              {title: "1. \u6982\u8ff0", url: "#1" },
+              {title: "2. \u7b7e\u540d\u7b97\u6cd5", url: "#2" },
+              {title: "3. \u5bc6\u94a5\u4ea4\u6362", url: "#3" },
+              {title: "4. \u516c\u94a5\u52a0\u5bc6", url: "#4" },
+          ]},
+          {title: "\u4ee3\u7406\u91cd\u52a0\u5bc6PRE", url: "#pre", children: [
+          ]},
+          {title: "\u96f6\u77e5\u8bc6\u8bc1\u660e", url: "#_1", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../../SDK/SDK%E6%A6%82%E8%BF%B0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../../SDK/SDK%E6%A6%82%E8%BF%B0/" class="btn btn-xs btn-link">
+        SDK概述
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        权限模型
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="sm2">国密sm2算法</h1>
+<h2 id="1">1. 概述</h2>
+<p>SM2算法是中华人民共和国政府采用的一种公钥加密标准，由国家密码管理局于2010年12月17日发布。在商用密码体系中，SM2用于替换RSA算法，可用来实现非对称加密、数字签名、密钥交换等功能。作为一种基于椭圆曲线的公钥密码算法，SM2算法在相同安全程度下，较RSA算法在密钥规模上存在优势。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>SM2</th>
+<th>RSA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>密钥规模</td>
+<td>192-256bit</td>
+<td>2048-4096bit</td>
+</tr>
+</tbody>
+</table>
+<p>算法标准包括4个部分：</p>
+<pre class="codehilite"><code>1. 总则，适用于基域为素域和二元扩域的椭圆曲线公钥密码算法；
+
+2. 数字签名算法，适用于商用密码应用中的数字签名和验证，可满足多种密码应用中的身份认证和数据完整性、真实性的安全需求；
+
+3. 密钥交换协议，适用于商用密码应用中的密钥交换，可满足通信双方经过两次或可选三次信息传递过程，计算获取一个由双方共同决定的共享秘密密钥（会话密钥）；
+
+4. 公钥加密算法，适用于商用密码应用中的消息加解密，消息发送者可以利用接收者的公钥对消息进行加密，接收者用对应的私钥进行解密；</code></pre>
+
+
+<p>相关标准为“GM/T 0003.1-2012 SM2 椭圆曲线公钥密码算法第1部分：总则”，“GM/T 0003.2-2012 SM2 椭圆曲线公钥密码算法第2部分：数字签名算法”，“GM/T 0003.3-2012 SM2 椭圆曲线公钥密码算法第3部分：密钥交换协议”，“GM/T 0003.4-2012 SM2 椭圆曲线公钥密码算法第4部分：公钥加密算法”，“GM/T 0003.5-2012 SM2 椭圆曲线公钥密码算法第5部分：参数定义“。</p>
+<h2 id="2">2. 签名算法</h2>
+<p>数字签名是附加在数据单元上的一些数据，或是对数据单元所作密码变换的结果，当正常应用时提供如下服务：</p>
+<ul>
+<li>数据来源的确认；</li>
+<li>数据完整性的验证；</li>
+<li>签名者不可抵赖的保证。</li>
+</ul>
+<p>数字签名算法由一个签名者对数据产生数字签名，并由一个验证者验证签名的可靠性。每个签名者有一个公钥和一个私钥，其中私钥用于产生签名，验证者用签名者的公钥验证签名。</p>
+<p>在签名的生成过程之前，要用密码杂凑函数（哈希函数）对消息M (包含<script type="math/tex">Z_A</script>和待签消息M)进行压缩。</p>
+<p>同理，在验证过程之前，要用密码杂凑函数对<script type="math/tex">M
+′</script> (包含<script type="math/tex">Z_A</script>和验证消息<script type="math/tex">M′</script> )进行压缩。</p>
+<h3 id="21">2.1. 系统参数</h3>
+<p>椭圆曲线的系统参数为：</p>
+<ul>
+<li>
+<script type="math/tex">F_q</script>：包含 <script type="math/tex">q</script> 个元素的素域</li>
+<li>椭圆曲线方程的参数a、b</li>
+<li>
+<script type="math/tex">G</script>：椭圆曲线的基点（<script type="math/tex">G=(x_G,y_G)</script>）</li>
+<li>
+<script type="math/tex">n</script>：基点G的阶，由基点<script type="math/tex">G</script>生成的群的元素的个数</li>
+<li>可选项：n的余因子<script type="math/tex">h</script>（<script type="math/tex">h = |E(F_q)|/n</script>）</li>
+</ul>
+<p>除了定义了椭圆曲线的参数和签名算法所需要的辅助函数：哈希函数和随机数发生器外，标准引入了用户信息标识的概念。</p>
+<p>签名者拥有长度为<script type="math/tex">entlen_A</script>比特的可辨别标识<script type="math/tex">ID_A</script>，在标准规定的签名算法中，需要在生成签名和验证签名前计算用户A的哈希值<script type="math/tex">Z_A</script>。<script type="math/tex">Z_A=H_{256}(ENTL_A||ID_A|| a||b||x_G||y_G||x_A||y_A)</script>，其中<script type="math/tex">ENTL_A</script>是由<script type="math/tex">entl_A</script>转换而成的两个字节。</p>
+<h3 id="22">2.2. 签名生成</h3>
+<ol>
+<li>预处理</li>
+</ol>
+<p>计算<script type="math/tex">Z_A</script>：<script type="math/tex">Z_A=H_{256}(ENTL_A||ID_A|| a||b||x_G||y_G||x_A||y_A)</script>
+</p>
+<ol>
+<li>签名</li>
+</ol>
+<p>输入：M，<script type="math/tex">Z_A</script>，私钥<script type="math/tex">d_A</script>
+</p>
+<p>输出：签名对<script type="math/tex">(r,s)</script>
+</p>
+<p>A1: 消息处理：<script type="math/tex">\overline M= Z_A||M</script>
+</p>
+<p>A2: 计算<script type="math/tex">e=H_v(\overline M)</script>
+</p>
+<p>A3: 产生随机数 <script type="math/tex">k\in [1,n-1]</script>
+</p>
+<p>A4: 计算曲线点<script type="math/tex">(x_1, y_1)=kG</script>
+</p>
+<p>A5: 计算<script type="math/tex">r= (e+x_1)\ mod\  n</script>， 若<script type="math/tex">r=0</script>或<script type="math/tex">r+k=n</script>则返回A3</p>
+<p>A6: 计算 <script type="math/tex">s= ((1+d_A)^{-1} (k- r*d_A))\ mod\ n</script>，若<script type="math/tex">s=0</script>则返回A3</p>
+<p>A7: 输出签名对<script type="math/tex">(r,s)</script>
+</p>
+<h3 id="23">2.3. 签名验证</h3>
+<ol>
+<li>预处理</li>
+</ol>
+<p>计算<script type="math/tex">Z_A</script>：<script type="math/tex">Z_A=H_{256}(ENTL_A||ID_A|| a||b||x_G||y_G||x_A||y_A)</script>
+</p>
+<ol>
+<li>验证</li>
+</ol>
+<p>输入：消息<script type="math/tex">M'</script>，签名<script type="math/tex">(r^{'}, s^{'})</script>， 公钥<script type="math/tex">P_A</script>
+</p>
+<p>输出：1 or 0</p>
+<p>B1:  检验<script type="math/tex">r′ ∈[1,n-1]</script>是否成立，若不成立则验证不通过；</p>
+<p>B2:  检验<script type="math/tex">s′ ∈[1,n-1]</script>是否成立，若不成立则验证不通过；</p>
+<p>B3: 消息处理：<script type="math/tex">\overline M^{'}= Z_A||M</script>
+</p>
+<p>B4: 计算 <script type="math/tex">e'=H_v(\overline M^{'})</script>
+</p>
+<p>B5: 计算 <script type="math/tex">t = (r'+ s')\ mod\ n</script>
+</p>
+<p>B6: 计算椭圆曲线点<script type="math/tex">(x_1',y_1') = s'G+ tP_A</script>
+</p>
+<p>B7: 计算 <script type="math/tex">R=(e'+x_1')\ mod\ n</script>，检验 <script type="math/tex">R=r'</script>是否成立，若成立则验证通过；否则验证不通过</p>
+<h3 id="24">2.4. 正确性说明</h3>
+<p>展开步骤B6中的等式
+<script type="math/tex; mode=display">
+\begin{align}
+ s'G+ tP_A &= (s'+ (r'+s')d_A)G \\
+ &= s'(1 + d_A)G + r'd_AG
+ \end{align}
+</script>
+根据签名生成中A6步骤的等式，可得
+<script type="math/tex; mode=display">
+k= s(1+d_A)+ rd_A 
+</script>
+</p>
+<p>因此，步骤B6中的等式可以恢复出签名生成的曲线点<script type="math/tex">kG</script>
+</p>
+<h2 id="3">3. 密钥交换</h2>
+<p>密钥交换协议是两个用户A和B通过交互的信息传递，用各自的私钥和对方的公钥来商定一个只有他们知道的秘密密钥。这个共享的秘密密钥通常用在某个对称密码算法中。该密钥交换协议能够用于密钥管理和协商。</p>
+<h3 id="31">3.1. 密钥交换流程</h3>
+<p>用户A和B双方为了生成相同的会话密钥，需要进行如下交互：</p>
+<p>记<script type="math/tex">w=⌈(⌈log_2(n)⌉/2)⌉−1。</script>
+</p>
+<p>用户A：</p>
+<p>A1：产生随机数<script type="math/tex">r_A ∈ [1, n-1]</script>；
+A2：计算椭圆曲线点<script type="math/tex">R_A = [r_A]G=(x_1,y_1)</script>；
+A3：将<script type="math/tex">R_A</script>发送给用户B；</p>
+<p>用户B：</p>
+<p>B1：产生随机数<script type="math/tex">r_B ∈ [1, n-1]</script>；</p>
+<p>B2：计算椭圆曲线点<script type="math/tex">R_B = [r_B]G=(x_2,y_2)</script>；</p>
+<p>B3：计算<script type="math/tex">\overline x_2 = 2^w + (x_2\&(2^w −1))</script>；</p>
+<p>B4：计算<script type="math/tex">t_B = (d_B +\overline x_2 ·r_B)\mod\ n</script>；</p>
+<p>B5：验证RA是否满足椭圆曲线方程，若不满足则协商失败；否则计算<script type="math/tex">\overline x_1 = 2^w + (x_1\&(2^w −1))</script>
+</p>
+<p>B6：计算椭圆曲线点<script type="math/tex">V = [h ·t_B](P_A +[\overline x_1]R_A) = (x_V ,y_V )</script>，若V是无穷远点，则B协商失败；</p>
+<p>B7：计算<script type="math/tex">K_B=KDF(x_V ∥ y_V ∥ Z_A ∥ Z_B,klen)</script>；</p>
+<p>B8：将<script type="math/tex">R_B</script>发送给用户A；</p>
+<p>用户A：</p>
+<p>A4：计算<script type="math/tex">\overline x_1 = 2^w + (x_1\&(2^w −1))</script>
+</p>
+<p>A5：计算<script type="math/tex">t_A = (d_A +\overline x_1 ·r_A)\mod\ n</script>；</p>
+<p>A6：验证<script type="math/tex">R_B</script>是否满足椭圆曲线方程，若不满足则协商失败；否则计算<script type="math/tex">\overline x_2 = 2^w + (x_2\&(2^w −1))</script>
+</p>
+<p>A7：计算椭圆曲线点<script type="math/tex">U = [h ·t_A](P_B + [\overline x_2]R_B) = (x_U ,y_U ) </script>，若U是无穷远点，则A协商失败；</p>
+<p>A8：计算<script type="math/tex">K_A=KDF(x_U ∥ y_U ∥ Z_A ∥ Z_B,klen)</script>；</p>
+<p>PS：上述步骤省略了校验步骤。</p>
+<p>正确性说明：</p>
+<p>将步骤B6和步骤A7中生成的椭圆曲线点U和V分别展开，可得：
+<script type="math/tex; mode=display">
+(x_V,y_V) = h( (d_B +\overline x_2 ·r_B))(d_A +\overline x_1 ·r_A)G
+</script>
+</p>
+<p>
+<script type="math/tex; mode=display">
+ (x_U,y_U) = h( (d_A +\overline x_1 ·r_A))(d_B +\overline x_2 ·r_B)G
+</script>
+</p>
+<h2 id="4">4. 公钥加密</h2>
+<p>公钥加密算法规定发送者用接收者的公钥将消息加密成密文，接收者用自已的私钥对收到的密文进行解密还原成原始消息。</p>
+<h3 id="41">4.1. 辅助函数</h3>
+<table>
+<thead>
+<tr>
+<th>
+<script type="math/tex">klen</script>
+</th>
+<th>要获得的密钥数据的比特长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>参数</td>
+<td>定义</td>
+</tr>
+<tr>
+<td>
+<script type="math/tex">H_v()</script>
+</td>
+<td>其输出是长度恰为v比特的哈希函数</td>
+</tr>
+<tr>
+<td>
+<script type="math/tex">ct</script>
+</td>
+<td>32比特构成的计数器</td>
+</tr>
+</tbody>
+</table>
+<p>辅助函数：</p>
+<ol>
+<li>
+<p>哈希函数：使用国家密码管理局批准的密码杂凑算法，如SM3密码杂凑算法</p>
+</li>
+<li>
+<p>
+<script type="math/tex">KDF(Z, klen)</script>:</p>
+</li>
+<li>
+<p>初始化计数器<script type="math/tex">ct = 0x000000001</script>
+</p>
+</li>
+<li>对i从1到<script type="math/tex">\lceil klen/v \rceil</script> 执行：<ol>
+<li>计算<script type="math/tex">H_{a_i} = H_v(Z|| ct)</script>
+</li>
+<li>ct ++  //之所以要计数器++，是为了满足最终KDF的输出是均匀随机的，如果不加的话，则每次hash输出的都是同一个值。</li>
+<li>若<script type="math/tex">klen/v</script>是整数，则<script type="math/tex">H_a!_{\lceil klen/v \rceil} =H_{a_{\lceil klen/v \rceil}} </script>，否则 <script type="math/tex">H_a!_{\lceil klen/v \rceil} </script>为<script type="math/tex">H_{a_{\lceil klen/v \rceil}} </script>最左边的(<script type="math/tex">klen - (v \times \lfloor klen/v \rfloor)</script>)比特</li>
+</ol>
+</li>
+<li>
+<script type="math/tex">K = H_{a_1} || H_{a_2}||...||H_{a_{\lceil klen/v \rceil-1}} || H_a!_{\lceil klen/v \rceil}</script>
+</li>
+</ol>
+<h3 id="42">4.2. 加密流程</h3>
+<p>输入：消息M，<script type="math/tex">klen</script>为消息的长度，公钥<script type="math/tex">P_B</script>
+</p>
+<p>输出：临时公钥(<script type="math/tex">C_1</script>)、密文（<script type="math/tex">C_2</script>）、消息认证码（<script type="math/tex">C_3</script>）</p>
+<p>A1：产生随机数<script type="math/tex">k∈[1,n-1]</script>；</p>
+<p>A2：计算椭圆曲线点<script type="math/tex">C_1=[k]G=(x_1,y_1)</script>
+</p>
+<p>A3：计算椭圆曲线点<script type="math/tex">S=[h]P_B</script>，若S是无穷远点，则报错并退出；</p>
+<p>A4：计算椭圆曲线点<script type="math/tex">[k]P_B=(x_2,y_2)</script>   // A与B共同持有的密钥，因为A知道B的公钥<script type="math/tex">P_B</script>，然后B是知道<script type="math/tex">C_1=kG</script>，B可以利用自己的私钥<script type="math/tex">d_B</script>与<script type="math/tex">C_1</script>计算出<script type="math/tex">kP_B</script>。</p>
+<p>A5：计算<script type="math/tex">t=KDF(x_2 ∥ y_2, klen)</script>，若t为全0比特串，则返回A1；</p>
+<p>A6：计算<script type="math/tex">C_2 = M ⊕ t</script>；//t不能全为0，如果全为0，则C_2=M</p>
+<p>A7：计算<script type="math/tex">C_3 = Hash(x_2 ∥ M ∥ y_2)</script>；<script type="math/tex">C_3</script>验证消息的完整性，以及验证的确是A发出来的。</p>
+<p>A8：输出密文<script type="math/tex">C = C_1 ∥ C_2 ∥ C_3</script>。</p>
+<h3 id="43">4.3. 解密流程</h3>
+<p>输入：密文<script type="math/tex">C = C_1 ∥ C_2 ∥ C_3</script>，私钥<script type="math/tex">d_B</script>
+</p>
+<p>输出：明文<script type="math/tex">M'</script>或fail</p>
+<p>B1：验证<script type="math/tex">C_1</script>是否满足椭圆曲线方程，若不满足则报错并退出；</p>
+<p>B2：计算椭圆曲线点<script type="math/tex">S=[h]C_1</script>，若S是无穷远点，则报错并退出；</p>
+<p>B3：计算<script type="math/tex">[d_B]C_1=(x_2,y_2)</script>
+</p>
+<p>B4：计算<script type="math/tex">t=KDF(x_2 ∥ y_2, klen)</script>，若t为全0比特串，则报错并退出；</p>
+<p>B5：计算<script type="math/tex">M′ = C_2 ⊕ t</script>；</p>
+<p>B6：计算<script type="math/tex">u = Hash(x_2 ∥ M′ ∥ y_2)</script>，检验<script type="math/tex">u = C_3</script>，若检验失败则报错并退出；</p>
+<p>B7：输出明文<script type="math/tex">M'</script>
+</p>
+<h1 id="pre">代理重加密PRE</h1>
+<p>随着大数据和云端存储服务的兴起，越来越多的用户选择将数据交由云端服务商进行存储。为了保护用户数据的隐私，用户存储在云端的数据是以密文形式存在的。在现实应用中存在着大量数据共享的场景。</p>
+<p>在传统的数据共享方案中，用户需先将加密存储在云端的文件进行下载，在本地解密，然后再使用密钥协商等方式将数据共享给数据使用方。而这种方式会耗费数据拥有者大量的通信和计算开销，并且将占用用户本地的存储空间。</p>
+<p>代理重加密的提出为数据共享提供了新思路。它是一种允许第三方（代理）对密文进行重加密，从而使得被授权用户（数据使用者）可以解密的方案，实现了在不泄漏数据拥有者私密信息的情况下，云端密文数据的共享。该方案较传统方案在通信、计算和存储开销上都存在明显的优势，在文件共享，邮件转发等场景中存在着广泛的应用前景。下面我们通过如下一个简要的例子介绍PRE的流程：</p>
+<p>假设用户Alice在云端加密存储了文件，现在Alice想要将该文件共享给另一个用户Bob。其做法如下：</p>
+<ul>
+<li>Alice利用自己的私钥和Bob的私钥/公钥生成重加密密钥<script type="math/tex">rk_{A\to B}</script>，并把该密钥发送给代理；</li>
+<li>代理使用重加密密钥<script type="math/tex">rk_{A\to B}</script>对Alice存放在云端的密文文件进行重加密；</li>
+<li>Bob直接下载重加密后的文件，并使用自己的私钥对数据进行解密。</li>
+</ul>
+<p><img alt="image-20200325155607075" src="../images/pre.png" /></p>
+<h1 id="_1">零知识证明</h1>
+<p>零知识证明这个概念最早由Goldwasser、Micali和Rackoff提出的，其表达核心思想是证明者要向验证者证明一个statement的正确性，与此同时不泄露任何额外的信息。它具有如下三个重要的性质：</p>
+<ul>
+<li>完备性completeness</li>
+<li>合理性soundness</li>
+<li>零知识性zero-knowledge</li>
+</ul>
+<p>近几年零知识证明被广泛应用到区块链中，如可验证的外包计算、匿名证书、范围证明、隐私密码学货币等需要平衡隐私性和机密性的应用场景，它已经在隐私性和可扩展性方面成为了一个非常重要的工具。在实际应用中客户端下载和验证交易频繁，因此要部署高效实用的零知识证明协议，需要该协议的证明足够小，验证足够高效（small proof size and fast verification）。随着密码学技术的不断发展，零知识证明的落地应用层出不穷。这些优秀的项目对零知识证明的技术的实用性进行了一系列的探索：</p>
+<ul>
+<li><strong>基于UTXO模型的零知识证明协议</strong>：零知识证明在密码学货币上具有广泛的应用，Zcash是zk-SNARKs的首个应用，它利用Groth16协议，实现了基于UTXO模型下交易双方地址和金额的完全隐藏，并且能够生成较短的高效的可验证的证明。但是该技术需要采用CRS来构造zk-SNARK，即需要引入可信第三方来生成一组公共参考串，与此同时也引入了对可信第三方的信任问题，尽管可以利用MPC等技术实现分布式协作生成CRS，但是依然无法完全解决CRS的引入带来的信任问题。</li>
+</ul>
+<p><img alt="image-20200325141833126" src="../images/zk.png" /></p>
+<p><img alt="image-20200325141856617" src="../images/zk2.png" /></p>
+<ul>
+<li><strong>基于账户模型的零知识证明协议</strong>：当前的区块链隐私支付系统，如Zcash和Monero等，均是基于UTXO模型，而Zether协议能实现基于账户模型的隐私支付，且能实现交易双方和交易金额的匿名化，该协议以智能合约的形式，方便地部署到基于账户模型的区块链系统中，而不需要修改底层链的逻辑。此外AZTEC协议采用Plonk零知识证明协议，实现了基于Ethereum账户模型下的隐私交易。</li>
+<li><strong>去CRS的零知识证明协议</strong>：目前在区块链领域中，大部分高效可验证的零知识证明协议都依赖于CRS。因此去CRS的零知识证明协议也是各个项目重点关注的话题。围绕该热议话题的主要分为两个方向：（1）探索完全去CRS的零知识证明协议，如bulletproof利用向量内积的方法实现了范围的证明，zk-STARK实现无需可信公共参数设置的证明，但是这两个零知识证明协议的证明较大，验证时间也较长。这也是完全去CRS的零知识证明协议不能被广泛应用的一个重要原因。</li>
+<li><strong>CRS的可更新的零知识证明协议</strong>：基于CRS的零知识证明协议会引入第三方信任问题，完全去CRS的零知识证明协议产生的证明较大，验证不够高效，因此有项目尝试探索介于两者直接的一种零知识证明协议，即基于可更新的结构化参考串（updatable structured reference string）的协议，如Sonic、Plonk它们支持SRS的可更新操作，这两个协议本质上仍然是需要可信的参数设置，但是通过MPC等技术一定程度上提高了用户对CRS安全性的信心。目前AZTEC利用Plonk协议实现了Ethereum上的隐私交易。</li>
+<li><strong>可扩展性的零知识证明协议</strong>：zk Rollup是一种新型的Layer2扩容方案，将链上的数据放到layer2解决。用户发送的交易，由relayer收集，生成零知识证明将发布交易后的新状态跟之前的状态捆绑在一起，保证用户状态变更的正确性。链上只存储用户状态的merkle树根，通过智能合约验证零知识证明的正确性。</li>
+<li><strong>基于具体应用需求的零知识证明协议：</strong>在实际中还有许多基于具体应用需求，并利用上述提及的零知识证明技术设计出的协议，如在存储场景下，filecoin的时空证明（proof of spacetime）和复制证明（proof of replication）是利用zk-SNARKs的Succinct特性的典型案例；在公平交易的场景下，zkPoD实现零信任的去中心化公平交易系统，在不可信双方之间进行交易，确保买卖双方间交易的公平性。</li>
+</ul>
+<p>目前零知识证明技术在实际应用中非常成熟，在我们的联盟链中，我们会根据实际的场景需求，采用或设计对应的零知识证明协议来满足我们的场景需求。    </p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../../SDK/SDK%E6%A6%82%E8%BF%B0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../../SDK/SDK%E6%A6%82%E8%BF%B0/" class="btn btn-xs btn-link">
+        SDK概述
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B/%E6%9D%83%E9%99%90%E6%A8%A1%E5%9E%8B-%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/" class="btn btn-xs btn-link">
+        权限模型
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

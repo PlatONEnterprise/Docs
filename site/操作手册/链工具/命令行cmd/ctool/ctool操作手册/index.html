@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>ctool - PlatONE</title>
+    <link href="../../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "ctool\u64cd\u4f5c\u624b\u518c", url: "#_top", children: [
+              {title: "1. \u914d\u7f6e\u6587\u4ef6 config.json", url: "#1-configjson" },
+              {title: "2. \u5408\u7ea6\u90e8\u7f72 | ctool deploy", url: "#2-ctool-deploy" },
+              {title: "3. \u5408\u7ea6\u8c03\u7528", url: "#3" },
+              {title: "4. \u8f6c\u8d26 | ctool sendTransaction", url: "#4-ctool-sendtransaction" },
+              {title: "5. \u4ea4\u6613\u56de\u6267\u67e5\u8be2 | ctool getTxReceipt", url: "#5-ctool-gettxreceipt" },
+              {title: "6. \u9632\u706b\u5899\u64cd\u4f5c | ctool fwInvoke", url: "#6-ctool-fwinvoke" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../../js/base.js"></script>
+      <script src="../../../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../ethkey/ethkey%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C%20-%20%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90%E4%B8%8E%E7%AE%A1%E7%90%86/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../ethkey/ethkey%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C%20-%20%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90%E4%B8%8E%E7%AE%A1%E7%90%86/" class="btn btn-xs btn-link">
+        ethkey
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../%E8%84%9A%E6%9C%ACscripts/Platonectl.sh%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../%E8%84%9A%E6%9C%ACscripts/Platonectl.sh%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-link">
+        脚本platonectl.sh
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ctool">ctool操作手册</h1>
+<h2 id="1-configjson">1. 配置文件 config.json</h2>
+<p>ctool中的部分参数会从配置文件中读取，若未指定<code>-config</code>，默认情况下从当前目录读取<code>config.json</code>文件。</p>
+<p>config.json文件展示：</p>
+<pre class="codehilite"><code class="language-json">{
+  "url":"http://192.168.9.73:6789",
+  "gas": "0x76c0",
+  "gasPrice": "0x9184e72a000",
+  "from":"0xfb8c2fa47e84fbde43c97a0859557a36a5fb285b"
+}</code></pre>
+
+<h2 id="2-ctool-deploy">2. 合约部署 | ctool deploy</h2>
+<pre class="codehilite"><code class="language-bash">./ctool deploy
+-abi        abi json file path (must)
+-code       wasm file path (must)
+-config     config path  (optional)
+
+e.g： ./ctool deploy -abi "D:\\resource\\temp\\contractc.cpp.abi.json" -code "D:\\resource\\temp\\contractc.wasm"</code></pre>
+
+<h2 id="3">3. 合约调用</h2>
+<h3 id="31-ctool-invoke">3.1 普通调用 | ctool invoke</h3>
+<pre class="codehilite"><code class="language-bash">./ctool invoke
+-addr     contract address (must)
+-func     functon name and param (must)
+-abi      abi json file path (must)
+-type     transaction type ,default 2 (optional)
+
+e.g: ./ctool invoke -addr "0xFC43e7f481b9d3F75CcfFc8D23eAC522E96dE570" -func "transfer("a",b,c) " -abi "D:\\resource\\temp\\contractc.cpp.abi.json" -type</code></pre>
+
+<h3 id="32-ctool-cnsinvoke">3.2 合约名称调用 | ctool cnsInvoke</h3>
+<pre class="codehilite"><code class="language-bash">./ctool cnsInvoke
+-cns      contract name (must)
+-func     functon name and param (must)
+-abi      abi json file path (must)
+-type     transaction type ,default 2 (optional)
+-config   config path  (optional)
+
+e.g: ./ctool cnsInvoke --cns "test" -func "transfer("a",b,c) " -abi "D:\\resource\\temp\\contractc.cpp.abi.json"</code></pre>
+
+<h2 id="4-ctool-sendtransaction">4. 转账 | ctool sendTransaction</h2>
+<pre class="codehilite"><code class="language-bash">./ctool sendTransaction
+-from       msg sender (must)
+-to         msg acceptor (must)
+-value      transfer value (must)
+-config     config path (optional)
+
+e.g: ./ctool transfer --from "0xb239401ecf8427f17c6de134d6a6bddd3100251f" --to "0X123" --value "10"</code></pre>
+
+<h2 id="5-ctool-gettxreceipt">5. 交易回执查询 | ctool getTxReceipt</h2>
+<pre class="codehilite"><code class="language-bash">./ctool getTxReceipt
+-hash       txhash (must)
+-config     config path (optional)
+
+e.g: ./ctool getTxReceipt -hash &lt;transaction_hash&gt; -config "../config.json"</code></pre>
+
+<h2 id="6-ctool-fwinvoke">6. 防火墙操作 | ctool fwInvoke</h2>
+<pre class="codehilite"><code class="language-bash">./ctool fwInvoke
+-addr     contract address (must)
+-func     functon name and param (must)
+-config   config path (optional)
+
+# 开启防火墙
+e.g: ./ctool fwInvoke --addr "0xacda4dfbbd6d093cf7e348abb33296d9aeb0f23c" --func '__sys_FwOpen()' --config "../config.json"</code></pre>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../ethkey/ethkey%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C%20-%20%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90%E4%B8%8E%E7%AE%A1%E7%90%86/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../ethkey/ethkey%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C%20-%20%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90%E4%B8%8E%E7%AE%A1%E7%90%86/" class="btn btn-xs btn-link">
+        ethkey
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../%E8%84%9A%E6%9C%ACscripts/Platonectl.sh%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../%E8%84%9A%E6%9C%ACscripts/Platonectl.sh%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="btn btn-xs btn-link">
+        脚本platonectl.sh
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

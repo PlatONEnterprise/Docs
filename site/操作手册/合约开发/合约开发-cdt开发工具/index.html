@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>cdt开发工具 - PlatONE</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "platone-CDT (Contract Development Toolkit)", url: "#_top", children: [
+              {title: "\u7f16\u8bd1", url: "#_1" },
+              {title: "\u4f7f\u7528", url: "#_3" },
+              {title: "Trouble shotting", url: "#trouble-shotting" },
+              {title: "License", url: "#license" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../mathjax-config.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cpp%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cpp%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91/" class="btn btn-xs btn-link">
+        cpp合约开发
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-%E7%BC%96%E8%AF%91%E5%8F%8A%E9%83%A8%E7%BD%B2/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-%E7%BC%96%E8%AF%91%E5%8F%8A%E9%83%A8%E7%BD%B2/" class="btn btn-xs btn-link">
+        编译及部署
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="platone-cdt-contract-development-toolkit">platone-CDT (Contract Development Toolkit)</h1>
+<p><strong>platone-CDT</strong>是WebAssembly(WASM)工具链和<strong>platone</strong>平台智能合约开发工具集.</p>
+<h2 id="_1">编译</h2>
+<h3 id="_2">编译要求</h3>
+<ul>
+<li>GCC 7.4+ 或 Clang 7.0+</li>
+<li>CMake 3.17+</li>
+<li>Git</li>
+<li>Python</li>
+</ul>
+<h3 id="ubuntu">Ubuntu</h3>
+<p>以下编译步骤在ubuntu 18.04下操作.</p>
+<ul>
+<li>安装依赖</li>
+</ul>
+<pre class="codehilite"><code class="language-sh">sudo apt install build-essential cmake libz-dev libtinfo-dev</code></pre>
+
+<ul>
+<li>获取源码</li>
+</ul>
+<pre class="codehilite"><code class="language-shell">git clone https://172.16.211.192/PlatONE/src/node/PlatONE-CDT.git</code></pre>
+
+<ul>
+<li>执行编译</li>
+</ul>
+<pre class="codehilite"><code class="language-sh">cd platone-CDT
+mkdir build &amp;&amp; cd build
+cmake .. 
+make &amp;&amp; make install</code></pre>
+
+<h3 id="windows">Windows</h3>
+<p>Windows下编译需要先安装<a href="https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/sjlj/x86_64-8.1.0-release-posix-sjlj-rt_v6-rev0.7z">MinGW-W64 GCC-8.1.0</a>, 且安装路径不能含有空格(即: 不能安装在"Program
+Files"或"Program Files(x86)目录"), 否则编译失败.</p>
+<ul>
+<li>获取源码</li>
+</ul>
+<pre class="codehilite"><code class="language-shell">git clone https://172.16.211.192/PlatONE/src/node/PlatONE-CDT.git</code></pre>
+
+<ul>
+<li>执行编译</li>
+</ul>
+<pre class="codehilite"><code class="language-sh">cd platone-CDT
+mkdir build &amp;&amp; cd build
+cmake -G "MinGW Makefiles" .. -DCMAKE_INSTALL_PREFIX="C:/platone.cdt" -DCMAKE_MAKE_PROGRAM=mingw32-make
+mingw32-make &amp;&amp; mingw32-make install</code></pre>
+
+<h2 id="_3">使用</h2>
+<p>在使用platone-CDT之前必须将platone-CDT编译生成的执行文件路径加到PATH环境变量中.</p>
+<h3 id="_4">单文件项目</h3>
+<ul>
+<li>初始化项目</li>
+</ul>
+<pre class="codehilite"><code class="language-sh">platone-init -project=example -bare</code></pre>
+
+<ul>
+<li>编译WASM文件</li>
+</ul>
+<pre class="codehilite"><code class="language-sh">cd example
+platone-cpp -o example.wasm example.cpp -abigen</code></pre>
+
+<h3 id="cmake">CMake项目</h3>
+<ul>
+<li>初始化项目</li>
+</ul>
+<pre class="codehilite"><code class="language-sh">platone-init -project=cmake_example </code></pre>
+
+<ul>
+<li>
+<p>编译</p>
+</li>
+<li>
+<p>Linux</p>
+<pre class="codehilite"><code>cd cmake_example/build
+cmake ..</code></pre>
+
+</li>
+<li>
+<p>Windows&gt;<strong>编译依赖:</strong>&gt;+ <a href="https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/sjlj/x86_64-8.1.0-release-posix-sjlj-rt_v6-rev0.7z">MinGW-W64 GCC-8.1.0</a>&gt;+ CMake 3.5 or higher</p>
+<pre class="codehilite"><code>cd cmake_example/build
+cmake .. -G "MinGW Makefiles" -Dplatone_CDT_ROOT=&lt;cdt_install_dir&gt;</code></pre>
+
+</li>
+</ul>
+<h2 id="trouble-shotting">Trouble shotting</h2>
+<p><pre class="codehilite"><code class="language-sh">platone-init: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.20' not found (required by platone-init)
+platone-init: /lib64/libstdc++.so.6: version `CXXABI_1.3.9' not found (required by platone-init)
+platone-init: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by platone-init)</code></pre>
+gcc&amp;g++版本太低导致，请升级版本</p>
+<h2 id="license">License</h2>
+<p>GNU General Public License v3.0, see <a href="https://github.com/platonenetwork/platone-CDT/blob/master/LICENSE">LICENSE</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cpp%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-cpp%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91/" class="btn btn-xs btn-link">
+        cpp合约开发
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-%E7%BC%96%E8%AF%91%E5%8F%8A%E9%83%A8%E7%BD%B2/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91-%E7%BC%96%E8%AF%91%E5%8F%8A%E9%83%A8%E7%BD%B2/" class="btn btn-xs btn-link">
+        编译及部署
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>
